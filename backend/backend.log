@@ -1,0 +1,43 @@
+INFO:     Started server process [28488]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('0.0.0.0', 8000): address already in use
+INFO:     Waiting for aINFO:     127.0.0.1:51488 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51499 - "GET /api/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51506 - "POST /api/seed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51514 - "GET /api/programs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51522 - "GET /api/chat/history/session_1772894482623_vf9jaw847 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51522 - "OPTIONS /api/chat HTTP/1.1" 200 OK
+ERROR:root:Chat error: name 'LlmChat' is not defined
+INFO:     127.0.0.1:51522 - "POST /api/chat HTTP/1.1" 200 OK
+ERROR:root:Chat error: name 'LlmChat' is not defined
+INFO:     127.0.0.1:51532 - "POST /api/chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51535 - "OPTIONS /api/auth/register HTTP/1.1" 200 OK
+WARNING:passlib.handlers.bcrypt:(trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/Users/sujithroshan/Library/Python/3.9/lib/python/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+AttributeError: module 'bcrypt' has no attribute '__about__'
+INFO:     127.0.0.1:51535 - "POST /api/auth/register HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51535 - "POST /api/seed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51535 - "GET /api/programs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51536 - "GET /api/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51543 - "GET /api/programs/c88510b2-cc8c-43d4-a6bb-87862a6dbc82 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51544 - "GET /api/programs/c88510b2-cc8c-43d4-a6bb-87862a6dbc82/subjects HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51543 - "GET /api/subjects/6a09268d-f09b-4b62-809c-3117d5679d1e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51544 - "GET /api/subjects/6a09268d-f09b-4b62-809c-3117d5679d1e/units HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51543 - "GET /api/units/bb69213e-ef92-43cb-9e0e-59bbe6c59e3b/videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51544 - "GET /api/units/db5c70b1-d9bd-4c3b-85b0-c6873163bb4c/videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51548 - "GET /api/units/45021357-e777-4984-83ec-554d64984e01/videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51547 - "GET /api/units/bf4ed64b-9801-483b-966d-9d1cad1869b6/videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51543 - "GET /api/videos/62659934-529e-401c-95fb-0f49320485b6 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51548 - "GET /api/units/bb69213e-ef92-43cb-9e0e-59bbe6c59e3b HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51544 - "GET /api/units/bb69213e-ef92-43cb-9e0e-59bbe6c59e3b/videos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51547 - "GET /api/units/bb69213e-ef92-43cb-9e0e-59bbe6c59e3b/notes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51543 - "OPTIONS /api/user-notes/bb69213e-ef92-43cb-9e0e-59bbe6c59e3b HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51548 - "GET /api/user-notes/bb69213e-ef92-43cb-9e0e-59bbe6c59e3b HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51551 - "OPTIONS /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51551 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51551 - "POST /api/seed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51551 - "GET /api/programs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51552 - "GET /api/stats HTTP/1.1" 200 OK
