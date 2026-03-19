@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -11,6 +11,8 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from passlib.context import CryptContext
 import jwt
+from collections import defaultdict
+import time
 
 ROOT_DIR = Path(__file__).parent
 # Load environment variables
@@ -46,8 +48,7 @@ async def add_security_headers(request, call_next):
     return response
 
 # --- Simple Rate Limiter ---
-from collections import defaultdict
-import time
+login_attempts = defaultdict(list)
 login_attempts = defaultdict(list)
 
 def check_rate_limit(key: str, limit: int = 5, window: int = 60):
@@ -210,8 +211,6 @@ def create_access_token(data: dict):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
-from fastapi import Header
 
 async def get_current_user(authorization: str = Header(None)):
     if not authorization or not authorization.startswith("Bearer "):
