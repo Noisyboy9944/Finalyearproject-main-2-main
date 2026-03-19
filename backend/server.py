@@ -21,14 +21,40 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 # Auth Config
-SECRET_KEY = "your-secret-key-change-in-production"
+SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "your-secret-key-change-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 300
+ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None) # Disable docs in prod by default (can be re-enabled if needed)
 api_router = APIRouter(prefix="/api")
+
+# --- Security Middleware ---
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://images.unsplash.com; connect-src 'self' http://localhost:8000 https://api.groq.com;"
+    return response
+
+# --- Simple Rate Limiter ---
+from collections import defaultdict
+import time
+login_attempts = defaultdict(list)
+
+def check_rate_limit(key: str, limit: int = 5, window: int = 60):
+    now = time.time()
+    attempts = [t for t in login_attempts[key] if t > now - window]
+    login_attempts[key] = attempts
+    if len(attempts) >= limit:
+        return False
+    login_attempts[key].append(now)
+    return True
 
 # --- Models ---
 
@@ -227,6 +253,10 @@ async def register(user: UserCreate):
 
 @api_router.post("/auth/login", response_model=Token)
 async def login(user: UserLogin):
+    # Basic rate limiting for login
+    if not check_rate_limit(user.email):
+        raise HTTPException(status_code=429, detail="Too many login attempts. Please try again later.")
+        
     db_user = await db.users.find_one({"email": user.email})
     if not db_user or not verify_password(user.password, db_user['password_hash']):
         raise HTTPException(status_code=401, detail="Incorrect email or password")
@@ -1312,7 +1342,7 @@ app.include_router(api_router)
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )
