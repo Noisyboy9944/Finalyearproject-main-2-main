@@ -43,7 +43,7 @@ const Dashboard = () => {
     );
 
     return (
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-full xl:max-w-7xl mx-auto">
             {/* Welcome Header */}
             <header className="mb-10">
                 <motion.div
@@ -51,15 +51,15 @@ const Dashboard = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <h1 className="text-3xl font-sans font-bold text-lms-fg mb-2">
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-sans font-bold text-lms-fg mb-2">
                         Welcome back, {user}! 👋
                     </h1>
-                    <p className="text-lms-muted">Continue where you left off or explore new programs.</p>
+                    <p className="text-lms-muted text-base lg:text-lg">Continue where you left off or explore new programs.</p>
                 </motion.div>
             </header>
 
             {/* Bento Grid - Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-10">
                 {/* Hero Stat Card */}
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
@@ -111,15 +111,16 @@ const Dashboard = () => {
 
             {/* Programs Section */}
             <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-lms-fg flex items-center gap-2">
-                    <BookBookmark className="text-lms-primary" /> My Programs
+                <h2 className="text-lg lg:text-xl font-bold text-lms-fg flex items-center gap-2">
+                    <BookBookmark className="text-lms-primary" />
+                    My Programs
                 </h2>
                 <Link to="/app/explore" className="text-sm text-lms-primary hover:underline font-medium flex items-center gap-1">
                     Explore All <TrendUp size={14} />
                 </Link>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {programs.map((program, idx) => (
                     <motion.div
                         key={program.id}

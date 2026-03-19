@@ -63,7 +63,7 @@ const Profile = () => {
     );
 
     return (
-        <div className="max-w-5xl mx-auto pb-16">
+        <div className="max-w-full xl:max-w-5xl mx-auto pb-16">
             {/* Mobile Back to Dashboard Button */}
             <div className="md:hidden mb-6">
                 <Link
@@ -77,12 +77,12 @@ const Profile = () => {
 
             {/* Header Section */}
             <header className="mb-10 bg-white/40 backdrop-blur-2xl border border-white/60 p-6 md:p-8 rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex items-center gap-4 md:gap-6">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-4xl text-white font-bold shadow-lg border-4 border-white">
+                <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-3xl md:text-4xl lg:text-5xl text-white font-bold shadow-lg border-4 border-white shrink-0">
                     {profile?.user?.full_name?.charAt(0) || 'U'}
                 </div>
                 <div>
-                    <h1 className="text-3xl font-serif font-bold text-gray-900 mb-1">{profile?.user?.full_name}</h1>
-                    <p className="text-gray-500 font-mono text-sm">{profile?.user?.email}</p>
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold text-gray-900 mb-1">{profile?.user?.full_name}</h1>
+                    <p className="text-gray-500 font-mono text-sm lg:text-base">{profile?.user?.email}</p>
                 </div>
             </header>
 
@@ -156,7 +156,7 @@ const Profile = () => {
                 {activeTab === 'courses' && (
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
                         {enrolledCourses.length > 0 ? (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                 {enrolledCourses.map(program => (
                                     <Link 
                                         key={program.id}

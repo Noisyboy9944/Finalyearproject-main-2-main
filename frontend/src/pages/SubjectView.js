@@ -49,14 +49,14 @@ const SubjectView = () => {
     );
 
     return (
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-full xl:max-w-5xl mx-auto">
             <Link to={`/app/program/${subject.program_id}`} className="inline-flex items-center gap-2 text-lms-muted hover:text-lms-fg mb-6 text-sm">
                 <ArrowLeft /> Back to Program
             </Link>
 
             <header className="mb-10">
-                <h1 className="text-4xl font-serif font-bold text-gray-900 mb-4">{subject.title}</h1>
-                <p className="text-lg text-gray-500">{subject.description}</p>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-gray-900 mb-4 leading-tight">{subject.title}</h1>
+                <p className="text-base md:text-lg text-gray-500">{subject.description}</p>
             </header>
 
             {isEnrolled ? (

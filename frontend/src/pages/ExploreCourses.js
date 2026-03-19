@@ -37,27 +37,30 @@ const ExploreCourses = () => {
     );
 
     return (
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-full xl:max-w-7xl mx-auto">
             {/* Header */}
-            <header className="mb-10">
-                <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                        <GraduationCap size={22} weight="fill" />
+            <header className="mb-8">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                            <GraduationCap size={26} weight="fill" />
+                        </div>
+                        <div>
+                            <h1 className="text-2xl lg:text-3xl xl:text-4xl font-sans font-bold text-lms-fg">Explore Programs</h1>
+                            <p className="text-lms-muted text-sm lg:text-base">Discover programs that match your learning goals.</p>
+                        </div>
                     </div>
-                    <h1 className="text-3xl font-sans font-bold text-lms-fg">Explore Programs</h1>
-                </div>
-                <p className="text-lms-muted mb-6">Discover programs and courses that match your learning goals.</p>
-                
-                {/* Search */}
-                <div className="relative max-w-md">
-                    <MagnifyingGlass size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <input
-                        type="text"
-                        placeholder="Search programs or subjects..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 transition-all"
-                    />
+                    {/* Search */}
+                    <div className="relative w-full lg:max-w-sm xl:max-w-md">
+                        <MagnifyingGlass size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Search programs or subjects..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-indigo-300 transition-all shadow-sm"
+                        />
+                    </div>
                 </div>
             </header>
 
