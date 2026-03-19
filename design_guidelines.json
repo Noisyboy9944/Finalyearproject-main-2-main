@@ -1,0 +1,224 @@
+{
+  "identity": {
+    "persona": "E1 - The Anti-AI Designer",
+    "mission": "Create a learning platform that feels like an intellectual adventure, not a spreadsheet.",
+    "principles": [
+      "Fusion over Imitation: Mix University Tradition (Serif) with Cyber-Future (Neon/Mono).",
+      "Emotion First: Marketing = Aspiration/Mystery; LMS = Clarity/Focus.",
+      "Content is King: Every scroll tells a story of growth.",
+      "Negative Space: Value the empty areas, especially in the dashboard.",
+      "Contrast: High contrast in Marketing, subtle separation in LMS."
+    ]
+  },
+  "brand_core": {
+    "name": "UniLearnHub",
+    "keywords": ["Intellectual", "Future-Forward", "Clear", "Adaptive", "Immersive"],
+    "emotional_tone": "The prestige of Oxford meets the speed of Silicon Valley."
+  },
+  "typography": {
+    "strategy": "The Old Money Tech",
+    "headings": {
+      "font_family": "Playfair Display, serif",
+      "usage": "Marketing Headings, Hero Sections, Feature Titles",
+      "weights": ["Regular (400)", "Italic"],
+      "tracking": "tight (-0.02em)",
+      "notes": "Use for emotional impact. Do not use for UI labels."
+    },
+    "body": {
+      "font_family": "JetBrains Mono, monospace",
+      "usage": "UI Elements, Dashboard Data, Body Text, Code Snippets",
+      "weights": ["Light (300)", "Regular (400)"],
+      "notes": "Creates a technical, precise feel. Increases legibility for data."
+    },
+    "lms_headings": {
+      "font_family": "Instrument Sans, sans-serif",
+      "usage": "Dashboard Card Titles, Navigation",
+      "weights": ["SemiBold (600)"],
+      "notes": "Clean geometric sans for the dashboard to reduce cognitive load."
+    }
+  },
+  "colors": {
+    "palette_strategy": "Hybrid Contextual",
+    "marketing_theme": {
+      "background": "#020420",
+      "foreground": "#e2e8f0",
+      "primary": "#a3e635",
+      "secondary": "#6366f1",
+      "accent": "#22d3ee",
+      "surface": "#0f172a",
+      "border": "rgba(255,255,255,0.1)"
+    },
+    "lms_theme": {
+      "background": "#f8fafc",
+      "foreground": "#0f172a",
+      "primary": "#312e81",
+      "secondary": "#e2e8f0",
+      "accent": "#4f46e5",
+      "surface": "#ffffff",
+      "border": "#e2e8f0",
+      "muted": "#94a3b8"
+    },
+    "chart_colors": [
+      "#4f46e5",
+      "#a3e635",
+      "#22d3ee",
+      "#f472b6",
+      "#fbbf24"
+    ]
+  },
+  "layout_system": {
+    "marketing_page": {
+      "grid_type": "Tetris Grid",
+      "container_width": "max-w-7xl",
+      "spacing": "Relaxed (p-12, gap-8)",
+      "scrollytelling": {
+        "engine": "Framer Motion + Intersection Observer",
+        "features": [
+          "Parallax backgrounds",
+          "Text reveal on scroll (staggered)",
+          "Sticky sidebars for context",
+          "Horizontal scroll for timelines"
+        ]
+      }
+    },
+    "lms_dashboard": {
+      "grid_type": "Bento Grid",
+      "columns": "grid-cols-1 md:grid-cols-12",
+      "gap": "gap-4 or gap-6",
+      "widgets": {
+        "hero_stat": "col-span-full md:col-span-8 row-span-2",
+        "quick_action": "col-span-6 md:col-span-4",
+        "list_feed": "col-span-full md:col-span-4 row-span-4"
+      }
+    }
+  },
+  "components": {
+    "marketing": {
+      "button": {
+        "style": "pill-shaped",
+        "classes": "rounded-full px-8 py-4 text-lg font-mono transition-transform hover:scale-105 active:scale-95",
+        "variants": {
+          "primary": "bg-[#a3e635] text-black hover:bg-[#bef264]",
+          "outline": "border border-white/20 text-white hover:bg-white/10"
+        }
+      },
+      "card": {
+        "style": "glassmorphism",
+        "classes": "backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors"
+      }
+    },
+    "lms": {
+      "button": {
+        "style": "sharp-rounded",
+        "classes": "rounded-md px-4 py-2 text-sm font-medium transition-colors",
+        "variants": {
+          "primary": "bg-indigo-900 text-white hover:bg-indigo-800",
+          "ghost": "hover:bg-slate-100 text-slate-700"
+        }
+      },
+      "card": {
+        "style": "clean-flat",
+        "classes": "bg-white border border-slate-200 shadow-sm rounded-xl p-6"
+      },
+      "navigation": {
+        "style": "sidebar-vertical",
+        "classes": "w-64 border-r border-slate-200 bg-white h-screen fixed left-0 top-0"
+      }
+    }
+  },
+  "visual_enhancers": {
+    "textures": [
+      "Noise overlay (opacity-5) for marketing background",
+      "Grid pattern (mask-image) for dashboard empty states"
+    ],
+    "shadows": {
+      "card_hover": "0 20px 40px -15px rgba(0,0,0,0.1)",
+      "glow": "0 0 20px rgba(163, 230, 53, 0.3)"
+    },
+    "borders": {
+      "marketing": "1px solid rgba(255,255,255,0.1)",
+      "lms": "1px solid #e2e8f0"
+    }
+  },
+  "media": {
+    "image_urls": [
+      {
+        "category": "hero_background",
+        "url": "https://images.unsplash.com/photo-1680444873773-7c106c23ac52?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzV8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB1bml2ZXJzaXR5JTIwY2FtcHVzJTIwYXJjaGl0ZWN0dXJlfGVufDB8fHx8MTc3MTc0MDU5MHww&ixlib=rb-4.1.0&q=85",
+        "description": "Modern university architecture with stairs, upward angle. Use for Hero section with parallax."
+      },
+      {
+        "category": "feature_collaboration",
+        "url": "https://images.unsplash.com/photo-1741699427799-3fbb70fce948?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwyfHxzdHVkZW50cyUyMGNvbGxhYm9yYXRpbmclMjBsYXB0b3AlMjBsaWJyYXJ5fGVufDB8fHx8MTc3MTc0MDU5MXww&ixlib=rb-4.1.0&q=85",
+        "description": "Students studying in a large library. Use for 'Community' feature section."
+      },
+      {
+        "category": "feature_mentorship",
+        "url": "https://images.pexels.com/photos/8197553/pexels-photo-8197553.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Professor engaging with diverse students. Use for 'Expert Mentorship' section."
+      },
+      {
+        "category": "feature_ai",
+        "url": "https://images.pexels.com/photos/17483870/pexels-photo-17483870.png?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Abstract neural network illustration. Use for 'AI-Powered Insights' section."
+      },
+      {
+        "category": "testimonial_student",
+        "url": "https://images.pexels.com/photos/8423455/pexels-photo-8423455.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Happy student raising hand in orange sweater. Use for Success Stories/Testimonials."
+      }
+    ],
+    "icons": {
+      "library": "phosphor-icons (Light weight for marketing, Regular for LMS)",
+      "preferred_pack": "@phosphor-icons/react"
+    }
+  },
+  "animations": {
+    "libraries": [
+      "framer-motion (Main engine)",
+      "lenis (Smooth scroll - MANDATORY for marketing page)"
+    ],
+    "rules": [
+      "No 'transition: all'. Animate specific properties.",
+      "Stagger children elements by 0.1s.",
+      "Marketing: Large, slow movements (0.8s duration).",
+      "LMS: Snappy, quick feedback (0.2s duration)."
+    ]
+  },
+  "accessibility": {
+    "rules": [
+      "Ensure text contrast > 4.5:1.",
+      "Interactive elements must have data-testid.",
+      "Focus states must be visible (ring-2 ring-offset-2).",
+      "Respect prefers-reduced-motion."
+    ]
+  },
+  "instructions_to_main_agent": {
+    "general": "You are building two distinct experiences: A Cinematic Marketing Page and a Functional LMS Dashboard. Do not mix the styles. Marketing is Dark/Neon. LMS is Light/Clean.",
+    "setup": [
+      "Install dependencies: yarn add framer-motion @phosphor-icons/react clsx tailwind-merge lenis",
+      "Ensure tailwind.config.js extends the colors defined above."
+    ],
+    "marketing_page": [
+      "Implement Lenis for smooth scrolling.",
+      "Use 'Playfair Display' for all H1-H3 headings.",
+      "Use 'JetBrains Mono' for small labels and buttons.",
+      "Create a sticky navigation that changes style when scrolling (Transparent -> Glass).",
+      "Use the 'Tetris Grid' for the features section."
+    ],
+    "lms_dashboard": [
+      "Use 'Instrument Sans' or default sans for headings.",
+      "Sidebar navigation should be fixed on the left.",
+      "Use the 'Bento Grid' for the main overview.",
+      "Cards should be white with subtle borders, no heavy shadows.",
+      "Use the chart colors defined for progress bars and graphs."
+    ]
+  },
+  "UNIVERSAL_GUIDELINES": [
+    "Do not use generic 'SaaS Blue' gradients.",
+    "Do not center align everything. Use asymmetry.",
+    "Use data-testid on all interactive elements.",
+    "Never use 'Lorem Ipsum'. Use realistic content related to education.",
+    "Add hover states to EVERYTHING interactive."
+  ]
+}

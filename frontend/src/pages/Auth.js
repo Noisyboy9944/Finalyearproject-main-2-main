@@ -44,9 +44,11 @@ const Auth = ({ type }) => {
             <LiquidBackground />
 
             {/* Back Button */}
-            <Link to="/" className="absolute top-8 left-8 z-20 flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-mono rounded-full bg-white/50 backdrop-blur-md px-4 py-2 border border-white/20 shadow-sm hover:shadow-md">
-                <CaretLeft size={20} /> Back to Home
-            </Link>
+            <div className="absolute top-4 left-4 md:top-8 md:left-8 z-20">
+                <Link to="/" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-mono rounded-full bg-white/50 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 border border-white/20 shadow-sm hover:shadow-md text-sm md:text-base">
+                    <CaretLeft size={20} /> <span className="hidden sm:inline">Back to Home</span><span className="sm:hidden">Back</span>
+                </Link>
+            </div>
 
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}

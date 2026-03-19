@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { UserCircle, Certificate, BookBookmark, PencilSimple, FloppyDisk, NotePencil, Clock, Users, ArrowRight } from '@phosphor-icons/react';
+import { UserCircle, Certificate, BookBookmark, PencilSimple, FloppyDisk, NotePencil, Clock, Users, ArrowRight, ArrowLeft } from '@phosphor-icons/react';
 
 const Profile = () => {
     const [profile, setProfile] = useState(null);
@@ -64,8 +64,19 @@ const Profile = () => {
 
     return (
         <div className="max-w-5xl mx-auto pb-16">
+            {/* Mobile Back to Dashboard Button */}
+            <div className="md:hidden mb-6">
+                <Link
+                    to="/app"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-white/60 backdrop-blur-md border border-white/60 text-lms-primary font-medium rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-sm"
+                >
+                    <ArrowLeft size={18} weight="bold" />
+                    Back to Dashboard
+                </Link>
+            </div>
+
             {/* Header Section */}
-            <header className="mb-10 bg-white/40 backdrop-blur-2xl border border-white/60 p-8 rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex items-center gap-6">
+            <header className="mb-10 bg-white/40 backdrop-blur-2xl border border-white/60 p-6 md:p-8 rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex items-center gap-4 md:gap-6">
                 <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-4xl text-white font-bold shadow-lg border-4 border-white">
                     {profile?.user?.full_name?.charAt(0) || 'U'}
                 </div>

@@ -13,6 +13,7 @@ const Layout = () => {
     const [programs, setPrograms] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const searchRef = useRef(null);
 
     const handleLogout = () => {
@@ -102,11 +103,34 @@ const Layout = () => {
     const searchResults = getSearchResults();
 
     return (
-        <div className="min-h-screen bg-transparent font-sans flex relative">
+        <div className="min-h-screen bg-transparent font-sans flex flex-col md:flex-row relative">
             <LiquidBackground />
 
+            {/* Mobile Header */}
+            <header className="md:hidden flex items-center justify-between p-4 bg-white/60 backdrop-blur-xl border-b border-white/40 sticky top-0 z-30 shadow-sm">
+                <h1 className="text-xl font-serif font-bold text-lms-primary">Unilearn</h1>
+                <button 
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="p-2 rounded-lg bg-lms-primary text-white shadow-md active:scale-95 transition-transform"
+                >
+                    <div className="w-6 h-5 flex flex-col justify-between relative">
+                        <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${isSidebarOpen ? 'rotate-45 translate-y-2' : ''}`} />
+                        <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${isSidebarOpen ? 'opacity-0' : ''}`} />
+                        <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${isSidebarOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+                    </div>
+                </button>
+            </header>
+
+            {/* Sidebar Overlay (Mobile Only) */}
+            {isSidebarOpen && (
+                <div 
+                    className="md:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar with Glassmorphism */}
-            <aside className="w-64 fixed h-full bg-white/60 backdrop-blur-xl border-r border-white/40 flex flex-col z-20 shadow-xl shadow-gray-200/20">
+            <aside className={`w-64 fixed md:static h-full bg-white/60 backdrop-blur-xl border-r border-white/40 flex flex-col z-50 shadow-xl shadow-gray-200/20 transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
                 <div className="p-6 border-b border-white/20">
                     <h1 className="text-xl font-serif font-bold text-lms-primary mb-6">Unilearn</h1>
                     <div className="relative" ref={searchRef}>
@@ -195,7 +219,7 @@ const Layout = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 ml-64 p-8 relative z-10">
+            <main className="flex-1 p-6 md:p-8 relative z-10">
                 <Outlet />
             </main>
 

@@ -34,7 +34,8 @@ services:
       DB_NAME: unilearnhub
       GROQ_API_KEY: ${GROQ_API_KEY}
     volumes:
-      - ./backend:/app
+      - ./backend:/app:delegated
+      - /app/venv
     depends_on:
       mongodb:
         condition: service_healthy
@@ -52,11 +53,11 @@ services:
       - "3001:3001"
     environment:
       REACT_APP_BACKEND_URL: http://localhost:8000
-      CHOKIDAR_USEPOLLING: "true"
-      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "false"
+      WATCHPACK_POLLING: "false"
     volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
+      - ./frontend/src:/app/src:delegated
+      - ./frontend/public:/app/public:delegated
     depends_on:
       - backend
     networks:

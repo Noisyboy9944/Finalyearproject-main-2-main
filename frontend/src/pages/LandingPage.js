@@ -234,6 +234,7 @@ const LandingPage = () => {
 
     const [activeStep, setActiveStep] = useState(0);
     const [openFAQ, setOpenFAQ] = useState(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
@@ -259,22 +260,60 @@ const LandingPage = () => {
             <LiquidBackground />
             
             {/* Navigation */}
-            <nav className="fixed w-full z-50 px-6 py-6 flex justify-between items-center bg-white/30 backdrop-blur-3xl border-b border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
+            <nav className="fixed w-full z-50 px-6 py-4 flex justify-between items-center bg-white/30 backdrop-blur-3xl border-b border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
                 <div className="text-2xl font-serif font-bold text-gray-900 tracking-tighter drop-shadow-sm">Unilearn</div>
-                <div className="hidden md:flex items-center gap-8 text-sm font-mono text-gray-700 font-medium">
+                
+                {/* Desktop Menu */}
+                <div className="hidden lg:flex items-center gap-8 text-sm font-mono text-gray-700 font-medium">
                     <a href="#how-it-works" className="hover:text-marketing-secondary transition-colors">How It Works</a>
                     <a href="#courses" className="hover:text-marketing-secondary transition-colors">Courses</a>
                     <a href="#testimonials" className="hover:text-marketing-secondary transition-colors">Reviews</a>
                     <a href="#faq" className="hover:text-marketing-secondary transition-colors">FAQ</a>
                 </div>
-                <div className="flex gap-4">
-                    <Link to="/login" className="hidden md:block px-6 py-2 rounded-full border border-gray-300 text-gray-700 font-mono hover:bg-gray-100 transition-colors">
+
+                <div className="hidden lg:flex gap-4">
+                    <Link to="/login" className="px-6 py-2 rounded-full border border-gray-300 text-gray-700 font-mono hover:bg-gray-100 transition-colors">
                         Login
                     </Link>
                     <Link to="/register" className="px-6 py-2 rounded-full bg-marketing-secondary text-white font-mono font-bold hover:bg-marketing-secondary/90 transition-transform hover:scale-105 shadow-md">
                         Start Learning
                     </Link>
                 </div>
+
+                {/* Mobile Menu Toggle */}
+                <button 
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className="lg:hidden p-2 text-gray-900 z-50"
+                >
+                    <div className="w-6 h-5 flex flex-col justify-between relative">
+                        <span className={`w-full h-0.5 bg-gray-900 rounded-full transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+                        <span className={`w-full h-0.5 bg-gray-900 rounded-full transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`} />
+                        <span className={`w-full h-0.5 bg-gray-900 rounded-full transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+                    </div>
+                </button>
+
+                {/* Mobile Menu Overlay */}
+                <motion.div 
+                    initial={false}
+                    animate={{ x: isMenuOpen ? 0 : '100%' }}
+                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                    className="fixed inset-0 bg-white/95 backdrop-blur-2xl z-40 lg:hidden flex flex-col items-center justify-center gap-8 p-10"
+                >
+                    <div className="flex flex-col items-center gap-6 text-xl font-serif font-bold text-gray-800">
+                        <a href="#how-it-works" onClick={() => setIsMenuOpen(false)}>How It Works</a>
+                        <a href="#courses" onClick={() => setIsMenuOpen(false)}>Courses</a>
+                        <a href="#testimonials" onClick={() => setIsMenuOpen(false)}>Reviews</a>
+                        <a href="#faq" onClick={() => setIsMenuOpen(false)}>FAQ</a>
+                    </div>
+                    <div className="flex flex-col gap-4 w-full max-w-xs">
+                        <Link to="/login" onClick={() => setIsMenuOpen(false)} className="w-full text-center px-6 py-4 rounded-xl border border-gray-300 text-gray-700 font-mono">
+                            Login
+                        </Link>
+                        <Link to="/register" onClick={() => setIsMenuOpen(false)} className="w-full text-center px-6 py-4 rounded-xl bg-marketing-secondary text-white font-mono font-bold">
+                            Start Learning
+                        </Link>
+                    </div>
+                </motion.div>
             </nav>
 
             {/* --- SCENE 1: THE SPARK (HERO) --- */}
@@ -300,7 +339,7 @@ const LandingPage = () => {
                         initial={{ y: 50, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.2, duration: 1 }}
-                        className="text-6xl md:text-9xl font-serif font-medium text-gray-900 mb-8 leading-none"
+                        className="text-5xl sm:text-7xl md:text-9xl font-serif font-medium text-gray-900 mb-8 leading-none"
                     >
                         Knowledge <br/> 
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-marketing-secondary to-marketing-accent">
@@ -393,7 +432,7 @@ const LandingPage = () => {
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.8 }}
-                            className="bg-white/50 backdrop-blur-2xl border border-white/60 p-8 md:p-16 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] text-center w-full"
+                            className="bg-white/50 backdrop-blur-2xl border border-white/60 p-6 sm:p-12 md:p-16 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] text-center w-full"
                         >
                             <h2 className="text-4xl sm:text-5xl md:text-7xl font-serif text-gray-900 mb-6 leading-tight drop-shadow-sm font-bold tracking-tight">Your future is waiting.</h2>
                             <p className="text-lg md:text-xl text-gray-600 mb-10 font-mono">
