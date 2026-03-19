@@ -130,7 +130,7 @@ const Layout = () => {
             )}
 
             {/* Sidebar with Glassmorphism */}
-            <aside className={`w-64 fixed md:static h-full bg-white/60 backdrop-blur-xl border-r border-white/40 flex flex-col z-50 shadow-xl shadow-gray-200/20 transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+            <aside className={`w-72 shrink-0 md:sticky md:top-0 md:h-screen md:overflow-y-auto fixed h-full bg-white/60 backdrop-blur-xl border-r border-white/40 flex flex-col z-50 shadow-xl shadow-gray-200/20 transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
                 <div className="p-6 border-b border-white/20">
                     <h1 className="text-xl font-serif font-bold text-lms-primary mb-6">Unilearn</h1>
                     <div className="relative" ref={searchRef}>
@@ -219,7 +219,7 @@ const Layout = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 p-6 md:p-8 relative z-10">
+            <main className="flex-1 min-w-0 p-6 md:p-8 lg:p-10 relative z-10">
                 <Outlet />
             </main>
 
