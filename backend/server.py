@@ -13,7 +13,9 @@ from passlib.context import CryptContext
 import jwt
 
 ROOT_DIR = Path(__file__).parent
+# Load environment variables
 load_dotenv(ROOT_DIR / '.env')
+load_dotenv(ROOT_DIR.parent / '.env') # Fallback to root .env
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -24,7 +26,8 @@ db = client[os.environ['DB_NAME']]
 SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "your-secret-key-change-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 300
-ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
+# Default to both common React ports (3000 and 3001) for development ease
+ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:3001,http://127.0.0.1:3001").split(",")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
