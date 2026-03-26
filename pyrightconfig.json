@@ -1,0 +1,10 @@
+{
+  "pythonPath": "/Users/sujithroshan/Downloads/Finalyearproject-main-2-main/backend/venv/bin/python3",
+  "venvPath": "/Users/sujithroshan/Downloads/Finalyearproject-main-2-main/backend",
+  "venv": "venv",
+  "include": ["backend"],
+  "exclude": ["frontend", "backend/venv"],
+  "extraPaths": [
+    "/Users/sujithroshan/Downloads/Finalyearproject-main-2-main/backend/venv/lib/python3.9/site-packages"
+  ]
+}

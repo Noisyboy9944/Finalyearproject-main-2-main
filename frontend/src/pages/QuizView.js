@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { CheckCircle, XCircle, ArrowLeft } from '@phosphor-icons/react';
 
 const QuizView = () => {
-    const { unitId } = useParams();
+    const { programId } = useParams();
     const navigate = useNavigate();
     const [quiz, setQuiz] = useState(null);
     const [answers, setAnswers] = useState({});
@@ -18,7 +18,7 @@ const QuizView = () => {
                 const API_URL = process.env.REACT_APP_BACKEND_URL;
                 const token = localStorage.getItem('token');
                 const config = { headers: { 'Authorization': `Bearer ${token}` } };
-                const res = await axios.get(`${API_URL}/api/units/${unitId}/quiz`, config);
+                const res = await axios.get(`${API_URL}/api/programs/${programId}/quiz`, config);
                 setQuiz(res.data);
             } catch (err) {
                 console.error(err);
@@ -27,7 +27,7 @@ const QuizView = () => {
             }
         };
         fetchQuiz();
-    }, [unitId]);
+    }, [programId]);
 
     const handleOptionSelect = (qId, idx) => {
         if (result) return; // Prevent selection after submit
@@ -45,7 +45,7 @@ const QuizView = () => {
             const token = localStorage.getItem('token');
             const config = { headers: { 'Authorization': `Bearer ${token}` } };
             const res = await axios.post(
-                `${API_URL}/api/units/${unitId}/quiz/submit`,
+                `${API_URL}/api/programs/${programId}/quiz/submit`,
                 { answers },
                 config
             );
@@ -67,7 +67,7 @@ const QuizView = () => {
     );
 
     if (!quiz || !quiz.questions || quiz.questions.length === 0) {
-        return <div className="text-center py-20">No Quiz available for this unit yet.</div>;
+        return <div className="text-center py-20">No Quiz available for this course yet.</div>;
     }
 
     return (
@@ -80,8 +80,8 @@ const QuizView = () => {
             </button>
 
             <header className="mb-10 text-center">
-                <h1 className="text-4xl font-serif font-bold text-lms-fg mb-2">Unit Quiz</h1>
-                <p className="text-lms-muted">Test your understanding to proceed.</p>
+                <h1 className="text-4xl font-serif font-bold text-lms-fg mb-2">Final Course Quiz</h1>
+                <p className="text-lms-muted">Test your understanding to get your certificate.</p>
                 
                 {quiz.progress && quiz.progress.passed && !result &&(
                     <div className="mt-4 bg-green-50 text-green-700 py-3 rounded-xl border border-green-200">

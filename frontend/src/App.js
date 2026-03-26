@@ -7,7 +7,6 @@ import LandingPage from "./pages/LandingPage";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import ProgramView from "./pages/ProgramView";
-import SubjectView from "./pages/SubjectView";
 import VideoPlayer from "./pages/VideoPlayer";
 import ExploreCourses from "./pages/ExploreCourses";
 import QuizView from "./pages/QuizView";
@@ -47,9 +46,8 @@ function App() {
                     <Route index element={<Dashboard />} />
                     <Route path="explore" element={<ExploreCourses />} />
                     <Route path="program/:programId" element={<ProgramView />} />
-                    <Route path="subject/:subjectId" element={<SubjectView />} />
-                    <Route path="unit/:unitId/video/:videoId" element={<VideoPlayer />} />
-                    <Route path="unit/:unitId/quiz" element={<QuizView />} />
+                    <Route path="program/:programId/video/:videoId" element={<VideoPlayer />} />
+                    <Route path="program/:programId/quiz" element={<QuizView />} />
                     <Route path="certificate/:programId" element={<CertificateView />} />
                     <Route path="profile" element={<Profile />} />
                 </Route>

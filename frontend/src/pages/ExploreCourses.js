@@ -26,8 +26,7 @@ const ExploreCourses = () => {
 
     const filteredPrograms = programs.filter(p => 
         p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.subjects?.some(s => s.title.toLowerCase().includes(searchQuery.toLowerCase()))
+        p.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     if (loading) return (
@@ -111,32 +110,9 @@ const ExploreCourses = () => {
                                         <Star size={16} weight="fill" />
                                         <span className="text-gray-600">{program.rating || 4.5}</span>
                                     </div>
-                                    <div className="flex items-center gap-1.5 text-gray-500">
-                                        <BookOpen size={16} />
-                                        <span>{program.subjects_count || 0} subjects</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        {/* Subjects Grid */}
-                        {program.subjects && program.subjects.length > 0 && (
-                            <div className="border-t border-gray-100 p-6 bg-gray-50/50">
-                                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Subjects Included</h3>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                                    {program.subjects.map(subject => (
-                                        <Link
-                                            key={subject.id}
-                                            to={`/app/subject/${subject.id}`}
-                                            className="group bg-white border border-gray-200 rounded-xl p-4 hover:border-indigo-300 hover:shadow-sm transition-all h-full flex flex-col"
-                                        >
-                                            <h4 className="font-medium text-sm text-lms-fg group-hover:text-indigo-600 transition-colors mb-1">{subject.title}</h4>
-                                            <p className="text-xs text-gray-400 line-clamp-2 mt-auto">{subject.description}</p>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
                     </motion.div>
                 ))}
             </div>

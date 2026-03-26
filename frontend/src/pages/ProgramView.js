@@ -8,7 +8,7 @@ const ProgramView = () => {
     const { programId } = useParams();
     const navigate = useNavigate();
     const [program, setProgram] = useState(null);
-    const [subjects, setSubjects] = useState([]);
+    const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isEnrolled, setIsEnrolled] = useState(false);
     const [progress, setProgress] = useState(null);
@@ -21,13 +21,13 @@ const ProgramView = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [progRes, subRes, enrollRes] = await Promise.all([
+                const [progRes, videoRes, enrollRes] = await Promise.all([
                     axios.get(`${API_URL}/api/programs/${programId}`),
-                    axios.get(`${API_URL}/api/programs/${programId}/subjects`),
+                    axios.get(`${API_URL}/api/programs/${programId}/videos`),
                     axios.get(`${API_URL}/api/enrollments/check/${programId}`, config)
                 ]);
                 setProgram(progRes.data);
-                setSubjects(subRes.data);
+                setVideos(videoRes.data);
                 setIsEnrolled(enrollRes.data.enrolled);
 
                 if (enrollRes.data.enrolled) {
@@ -122,28 +122,42 @@ const ProgramView = () => {
                 </div>
             </div>
 
-            {/* Subjects */}
+            {/* Course Content */}
             {isEnrolled ? (
                 <>
                     <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                        <BookOpen className="text-lms-primary" /> Available Subjects
+                        <BookOpen className="text-lms-primary" /> Course Content
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {subjects.map(subject => (
+                    <div className="flex flex-col gap-4">
+                        {videos.map((video, idx) => (
                             <Link
-                                to={`/app/subject/${subject.id}`}
-                                key={subject.id}
+                                to={`/app/program/${programId}/video/${video.id}`}
+                                key={video.id}
                                 className="bg-white/50 backdrop-blur-xl border border-white/60 rounded-xl p-6 hover:border-lms-primary/40 hover:shadow-lg transition-all group"
                             >
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-lms-primary transition-colors">{subject.title}</h3>
-                                        <p className="text-sm text-gray-500">{subject.description}</p>
+                                        <h3 className="font-bold text-lg text-gray-900 mb-1 group-hover:text-lms-primary transition-colors">{idx + 1}. {video.title}</h3>
+                                        <p className="text-sm text-gray-500 font-mono">{video.duration} • Instructor: {video.instructor}</p>
                                     </div>
                                     <CaretRight className="text-gray-400 group-hover:translate-x-1 transition-transform mt-1" />
                                 </div>
                             </Link>
                         ))}
+                        
+                        {/* Course Quiz */}
+                        <Link
+                            to={`/app/program/${programId}/quiz`}
+                            className="bg-indigo-50/50 backdrop-blur-xl border border-indigo-100 rounded-xl p-6 hover:border-indigo-300 hover:shadow-lg transition-all group mt-2"
+                        >
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h3 className="font-bold text-lg text-indigo-900 mb-1 group-hover:text-indigo-700 transition-colors">Final Course Quiz</h3>
+                                    <p className="text-sm text-indigo-600">Test your knowledge to earn your certificate</p>
+                                </div>
+                                <CaretRight className="text-indigo-400 group-hover:translate-x-1 transition-transform mt-1" />
+                            </div>
+                        </Link>
                     </div>
                 </>
             ) : (
@@ -158,11 +172,11 @@ const ProgramView = () => {
                     </div>
                     <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3">Enroll to Access Content</h3>
                     <p className="text-gray-500 max-w-md mx-auto mb-8 font-mono text-sm">
-                        This program contains {subjects.length} subject{subjects.length !== 1 ? 's' : ''} with video lectures, notes, and quizzes. Enroll to unlock everything — for free.
+                        This program contains video lectures, notes, and a final quiz. Enroll to unlock everything — for free.
                     </p>
                     <div className="flex flex-wrap gap-3 justify-center text-sm text-gray-600 mb-8">
-                        {subjects.map(s => (
-                            <span key={s.id} className="px-4 py-2 bg-white/60 border border-gray-200 rounded-full font-medium">{s.title}</span>
+                        {videos.map(v => (
+                            <span key={v.id} className="px-4 py-2 bg-white/60 border border-gray-200 rounded-full font-medium text-xs">{v.title}</span>
                         ))}
                     </div>
                     <button

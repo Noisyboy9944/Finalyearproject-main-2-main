@@ -6,10 +6,10 @@ import { ArrowLeft, Play, NotePencil, VideoCamera, FloppyDisk, PencilSimple, Eye
 import clsx from 'clsx';
 
 const VideoPlayer = () => {
-    const { unitId, videoId } = useParams();
+    const { programId, videoId } = useParams();
     const [currentVideo, setCurrentVideo] = useState(null);
     const [playlist, setPlaylist] = useState([]);
-    const [unit, setUnit] = useState(null);
+    const [program, setProgram] = useState(null);
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('playlist');
@@ -30,21 +30,21 @@ const VideoPlayer = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [videoRes, playlistRes, unitRes, notesRes] = await Promise.all([
+                const [videoRes, playlistRes, progRes, notesRes] = await Promise.all([
                     axios.get(`${API_URL}/api/videos/${videoId}`),
-                    axios.get(`${API_URL}/api/units/${unitId}/videos`),
-                    axios.get(`${API_URL}/api/units/${unitId}`),
-                    axios.get(`${API_URL}/api/units/${unitId}/notes`)
+                    axios.get(`${API_URL}/api/programs/${programId}/videos`),
+                    axios.get(`${API_URL}/api/programs/${programId}`),
+                    axios.get(`${API_URL}/api/programs/${programId}/notes`)
                 ]);
 
                 setCurrentVideo(videoRes.data);
                 setPlaylist(playlistRes.data);
-                setUnit(unitRes.data);
+                setProgram(progRes.data);
                 setNotes(notesRes.data);
 
                 // Fetch user's personal note
                 try {
-                    const userNoteRes = await axios.get(`${API_URL}/api/user-notes/${unitId}`, {
+                    const userNoteRes = await axios.get(`${API_URL}/api/user-notes/${programId}`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     if (userNoteRes.data) {
@@ -61,7 +61,7 @@ const VideoPlayer = () => {
             }
         };
         fetchData();
-    }, [unitId, videoId, API_URL, token]);
+    }, [programId, videoId, API_URL, token]);
 
     // Reset playing state when video changes
     useEffect(() => {
@@ -73,7 +73,7 @@ const VideoPlayer = () => {
         setUserNoteSaving(true);
         setUserNoteSaved(false);
         try {
-            await axios.put(`${API_URL}/api/user-notes/${unitId}`, 
+            await axios.put(`${API_URL}/api/user-notes/${programId}`, 
                 { content },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -85,7 +85,7 @@ const VideoPlayer = () => {
         } finally {
             setUserNoteSaving(false);
         }
-    }, [API_URL, unitId, token]);
+    }, [API_URL, programId, token]);
 
     const handleNoteChange = (e) => {
         const content = e.target.value;
@@ -164,8 +164,8 @@ const VideoPlayer = () => {
         <div className="h-[calc(100vh-80px)] flex flex-col lg:flex-row gap-6">
             {/* Main Player Section */}
             <div className="flex-1 flex flex-col min-w-0">
-                <Link to={`/app/subject/${unit.subject_id}`} className="inline-flex items-center gap-2 text-lms-muted hover:text-lms-fg mb-4 text-sm">
-                    <ArrowLeft /> Back to Unit
+                <Link to={`/app/program/${programId}`} className="inline-flex items-center gap-2 text-lms-muted hover:text-lms-fg mb-4 text-sm">
+                    <ArrowLeft /> Back to Course
                 </Link>
 
                 <div className="bg-black rounded-2xl overflow-hidden shadow-2xl aspect-video w-full relative mb-6">
@@ -239,14 +239,14 @@ const VideoPlayer = () => {
                     {activeTab === 'playlist' && (
                         <div className="p-2 space-y-1">
                             <div className="px-3 py-2">
-                                <p className="text-xs text-lms-muted font-mono truncate">{unit.title}</p>
+                                <p className="text-xs text-lms-muted font-mono truncate">{program?.title}</p>
                             </div>
                             {playlist.map((video) => {
                                 const isActive = video.id === currentVideo.id;
                                 return (
                                     <Link 
                                         key={video.id}
-                                        to={`/app/unit/${unitId}/video/${video.id}`}
+                                        to={`/app/program/${programId}/video/${video.id}`}
                                         className={clsx(
                                             "flex items-start gap-3 p-3 rounded-lg transition-colors",
                                             isActive ? "bg-lms-primary/10 border border-lms-primary/20" : "hover:bg-slate-50"

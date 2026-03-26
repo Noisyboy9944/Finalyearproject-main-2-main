@@ -150,7 +150,7 @@ const Dashboard = () => {
                                     <span className="flex items-center gap-1"><Users size={12} /> {(program.students_count || 0).toLocaleString()}</span>
                                 </div>
                                 <span className="inline-flex items-center gap-2 text-sm font-medium text-lms-primary group-hover:underline">
-                                    View Subjects <BookBookmark />
+                                    View Course <BookBookmark />
                                 </span>
                             </div>
                         </Link>

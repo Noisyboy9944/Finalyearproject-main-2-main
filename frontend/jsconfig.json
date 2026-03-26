@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "target": "ES6",
+    "lib": ["es6", "dom"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

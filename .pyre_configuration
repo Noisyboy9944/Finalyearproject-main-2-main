@@ -1,0 +1,9 @@
+{
+  "search_path": [
+    "/Users/sujithroshan/Downloads/Finalyearproject-main-2-main/backend/venv/lib/python3.9/site-packages",
+    "/Library/Developer/CommandLineTools/usr/bin/python3"
+  ],
+  "source_directories": [
+    "backend"
+  ]
+}
