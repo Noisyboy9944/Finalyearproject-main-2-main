@@ -21,18 +21,27 @@ const ProgramView = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [progRes, videoRes, enrollRes] = await Promise.all([
+                // Fetch public data first
+                const [progRes, videoRes] = await Promise.all([
                     axios.get(`${API_URL}/api/programs/${programId}`),
-                    axios.get(`${API_URL}/api/programs/${programId}/videos`),
-                    axios.get(`${API_URL}/api/enrollments/check/${programId}`, config)
+                    axios.get(`${API_URL}/api/programs/${programId}/videos`)
                 ]);
                 setProgram(progRes.data);
                 setVideos(videoRes.data);
-                setIsEnrolled(enrollRes.data.enrolled);
 
-                if (enrollRes.data.enrolled) {
-                    const progressRes = await axios.get(`${API_URL}/api/enrollments/progress/${programId}`, config);
-                    setProgress(progressRes.data);
+                // Fetch authenticated data safely
+                if (token) {
+                    try {
+                        const enrollRes = await axios.get(`${API_URL}/api/enrollments/check/${programId}`, config);
+                        setIsEnrolled(enrollRes.data.enrolled);
+
+                        if (enrollRes.data.enrolled) {
+                            const progressRes = await axios.get(`${API_URL}/api/enrollments/progress/${programId}`, config);
+                            setProgress(progressRes.data);
+                        }
+                    } catch (e) {
+                         console.warn("Could not fetch enrollment status", e);
+                    }
                 }
             } catch (err) {
                 console.error(err);
@@ -44,6 +53,10 @@ const ProgramView = () => {
     }, [programId]);
 
     const handleEnroll = async () => {
+        if (!token) {
+            navigate('/auth'); // Or prompt login
+            return;
+        }
         setEnrolling(true);
         try {
             await axios.post(`${API_URL}/api/enrollments/${programId}`, {}, config);
@@ -60,6 +73,13 @@ const ProgramView = () => {
     if (loading) return (
         <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-lms-primary"></div>
+        </div>
+    );
+
+    if (!program) return (
+        <div className="text-center py-20 text-gray-500">
+            <h2 className="text-2xl font-bold mb-2">Error Loading Program</h2>
+            <p>We couldn't load the program details. Please try refreshing.</p>
         </div>
     );
 
@@ -146,18 +166,31 @@ const ProgramView = () => {
                         ))}
                         
                         {/* Course Quiz */}
-                        <Link
-                            to={`/app/program/${programId}/quiz`}
-                            className="bg-indigo-50/50 backdrop-blur-xl border border-indigo-100 rounded-xl p-6 hover:border-indigo-300 hover:shadow-lg transition-all group mt-2"
-                        >
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <h3 className="font-bold text-lg text-indigo-900 mb-1 group-hover:text-indigo-700 transition-colors">Final Course Quiz</h3>
-                                    <p className="text-sm text-indigo-600">Test your knowledge to earn your certificate</p>
+                        {progress?.all_videos_completed ? (
+                            <Link
+                                to={`/app/program/${programId}/quiz`}
+                                className="bg-indigo-50/50 backdrop-blur-xl border border-indigo-100 rounded-xl p-6 hover:border-indigo-300 hover:shadow-lg transition-all group mt-2"
+                            >
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <h3 className="font-bold text-lg text-indigo-900 mb-1 group-hover:text-indigo-700 transition-colors">Final Course Quiz</h3>
+                                        <p className="text-sm text-indigo-600">Test your knowledge to earn your certificate</p>
+                                    </div>
+                                    <CaretRight className="text-indigo-400 group-hover:translate-x-1 transition-transform mt-1" />
                                 </div>
-                                <CaretRight className="text-indigo-400 group-hover:translate-x-1 transition-transform mt-1" />
+                            </Link>
+                        ) : (
+                            <div className="bg-gray-50/50 backdrop-blur-xl border border-gray-200 rounded-xl p-6 opacity-70 group mt-2 cursor-not-allowed">
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <h3 className="font-bold text-lg text-gray-500 mb-1 flex items-center gap-2">
+                                            <Lock size={18} weight="fill" /> Final Course Quiz
+                                        </h3>
+                                        <p className="text-sm text-gray-400">Watch all video lectures to unlock the final quiz</p>
+                                    </div>
+                                </div>
                             </div>
-                        </Link>
+                        )}
                     </div>
                 </>
             ) : (

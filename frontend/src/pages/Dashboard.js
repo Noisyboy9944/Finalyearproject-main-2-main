@@ -20,7 +20,7 @@ const Dashboard = () => {
                 const config = { headers: { 'Authorization': `Bearer ${token}` } };
                 
                 const [progRes, statsRes, dashProgRes] = await Promise.all([
-                    axios.get(`${API_URL}/api/programs`),
+                    axios.get(`${API_URL}/api/enrollments/me`, config),
                     axios.get(`${API_URL}/api/stats`),
                     axios.get(`${API_URL}/api/progress/dashboard`, config)
                 ]);
@@ -146,11 +146,23 @@ const Dashboard = () => {
                                 <h3 className="font-sans font-bold text-lg text-lms-fg line-clamp-2 mb-2 group-hover:text-lms-primary transition-colors">{program.title}</h3>
                                 <p className="text-sm text-lms-muted line-clamp-2 mb-4 flex-1">{program.description}</p>
                                 <div className="flex items-center gap-4 text-xs text-lms-muted mb-4 mt-auto">
-                                    <span className="flex items-center gap-1"><Clock size={12} /> {program.duration || '3 Years'}</span>
+                                    <span className="flex items-center gap-1"><Clock size={12} /> {program.duration || '20 Hours'}</span>
                                     <span className="flex items-center gap-1"><Users size={12} /> {(program.students_count || 0).toLocaleString()}</span>
                                 </div>
+                                <div className="mt-2 mb-4 text-sm">
+                                    <div className="flex justify-between items-center mb-1 text-xs">
+                                        <span className="text-gray-500 font-medium">Course Progress</span>
+                                        <span className="text-lms-primary font-bold">{program.progress || 0}%</span>
+                                    </div>
+                                    <div className="w-full bg-gray-100 rounded-full h-1.5">
+                                        <div 
+                                            className="bg-lms-primary h-1.5 rounded-full" 
+                                            style={{ width: `${program.progress || 0}%` }}
+                                        ></div>
+                                    </div>
+                                </div>
                                 <span className="inline-flex items-center gap-2 text-sm font-medium text-lms-primary group-hover:underline">
-                                    View Course <BookBookmark />
+                                    Continue Learning <BookBookmark />
                                 </span>
                             </div>
                         </Link>

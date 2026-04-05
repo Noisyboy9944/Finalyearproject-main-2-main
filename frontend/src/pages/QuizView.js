@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { CheckCircle, XCircle, ArrowLeft } from '@phosphor-icons/react';
+import { CheckCircle, XCircle, ArrowLeft, Lock } from '@phosphor-icons/react';
 
 const QuizView = () => {
     const { programId } = useParams();
@@ -68,6 +68,34 @@ const QuizView = () => {
 
     if (!quiz || !quiz.questions || quiz.questions.length === 0) {
         return <div className="text-center py-20">No Quiz available for this course yet.</div>;
+    }
+
+    if (quiz.all_videos_completed === false) {
+        return (
+            <div className="max-w-3xl mx-auto py-20 text-center">
+                <button 
+                    onClick={() => navigate(-1)} 
+                    className="inline-flex items-center gap-2 text-lms-muted hover:text-lms-fg mb-10 text-sm"
+                >
+                    <ArrowLeft /> Back
+                </button>
+                <div className="bg-white/50 backdrop-blur-xl border border-white/60 rounded-[2rem] p-12 shadow-xl inline-block max-w-lg">
+                    <div className="w-20 h-20 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Lock size={36} weight="duotone" />
+                    </div>
+                    <h3 className="text-2xl font-serif font-bold text-gray-900 mb-3">Quiz Locked</h3>
+                    <p className="text-gray-500 mb-6 font-mono text-sm">
+                        You must watch all video lectures in this course before you can attempt the final quiz.
+                    </p>
+                    <button
+                        onClick={() => navigate(`/app/program/${programId}`)}
+                        className="px-8 py-3 bg-lms-primary text-white rounded-xl font-bold hover:scale-105 transition-all text-sm"
+                    >
+                        Go to Videos
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     return (

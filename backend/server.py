@@ -717,6 +717,11 @@ async def get_program_quiz(program_id: str, user_email: str = Depends(get_curren
         "user_email": user_email, "program_id": program_id
     }, {"_id": 0})
     
+    # Check if all videos are completed
+    watched_videos = await db.video_progress.count_documents({"user_email": user_email, "program_id": program_id})
+    total_videos = await db.videos.count_documents({"program_id": program_id})
+    all_videos_completed = (watched_videos >= total_videos) and (total_videos > 0)
+    
     # Hide correct answers from client
     client_quiz: Dict[str, Any] = dict(quiz)
     client_questions: List[Dict[str, Any]] = []
@@ -728,6 +733,7 @@ async def get_program_quiz(program_id: str, user_email: str = Depends(get_curren
                 client_questions.append(client_q)
     client_quiz["questions"] = client_questions
     client_quiz["progress"] = progress
+    client_quiz["all_videos_completed"] = all_videos_completed
     
     return client_quiz
 
@@ -872,7 +878,17 @@ async def get_my_enrollments(user_email: str = Depends(get_current_user)):
 async def get_program_progress(program_id: str, user_email: str = Depends(get_current_user)):
     passed = await db.quiz_progress.count_documents({"user_email": user_email, "program_id": program_id, "passed": True})
     progress_pct = 100 if passed > 0 else 0
-    return {"total_units": 1, "passed_quizzes": passed, "progress": progress_pct}
+    
+    watched_videos = await db.video_progress.count_documents({"user_email": user_email, "program_id": program_id})
+    total_videos = await db.videos.count_documents({"program_id": program_id})
+    all_videos_completed = (watched_videos >= total_videos) and (total_videos > 0)
+    
+    return {
+        "total_units": 1, 
+        "passed_quizzes": passed, 
+        "progress": progress_pct,
+        "all_videos_completed": all_videos_completed
+    }
 
 # --- Profile ---
 @api_router.get("/profile")
@@ -947,13 +963,71 @@ async def seed_data():
         })
         await db.programs.insert_one(program.model_dump())
 
-        # Add 2 videos per program directly
-        for v_idx in range(1, 3):
+        video_sources = {
+            "Graphic designing": [
+                "https://www.youtube.com/watch?v=WONcVOU5Cns",
+                "https://www.youtube.com/watch?v=sByzHoiY3s4",
+                "https://www.youtube.com/watch?v=YqQx75OPRa0",
+                "https://www.youtube.com/watch?v=3MneXJv1xR0"
+            ],
+            "C programming": [
+                "https://www.youtube.com/watch?v=KJgsSFOSQv0",
+                "https://www.youtube.com/watch?v=87SH2Cn0s9A",
+                "https://www.youtube.com/watch?v=vLnPwxZdW4Y",
+                "https://www.youtube.com/watch?v=ZSPZob_1TOk"
+            ],
+            "Digital marketing": [
+                "https://www.youtube.com/watch?v=bixR-KIJKYM",
+                "https://www.youtube.com/watch?v=nU-IIXBWlS4",
+                "https://www.youtube.com/watch?v=Zqg1X9rX52s",
+                "https://www.youtube.com/watch?v=hGzD_14rG5I"
+            ],
+            "Ui/Ux": [
+                "https://www.youtube.com/watch?v=c9Wg6Cb_YlU",
+                "https://www.youtube.com/watch?v=zHAa-m16NQk",
+                "https://www.youtube.com/watch?v=y29XNO1TjWM",
+                "https://www.youtube.com/watch?v=qA2y1dF0OIM"
+            ],
+            "Python": [
+                "https://www.youtube.com/watch?v=_uQrJ0TkZlc",
+                "https://www.youtube.com/watch?v=kqtD5dpn9C8",
+                "https://www.youtube.com/watch?v=Z1Yd7upQsXY",
+                "https://www.youtube.com/watch?v=QXeEoD0pB3E"
+            ],
+            "MYSQL": [
+                "https://www.youtube.com/watch?v=7S_tz1z_5bA",
+                "https://www.youtube.com/watch?v=HXV3zeQKqGY",
+                "https://www.youtube.com/watch?v=WmGcxfkWOXY",
+                "https://www.youtube.com/watch?v=qw--VYLpxG4"
+            ],
+            "DSA": [
+                "https://www.youtube.com/watch?v=8hly31xKli0",
+                "https://www.youtube.com/watch?v=RBSGKlAvoiM",
+                "https://www.youtube.com/watch?v=zg9ih6SVACc",
+                "https://www.youtube.com/watch?v=AT14lCXuMKI"
+            ],
+            "Cloud computing": [
+                "https://www.youtube.com/watch?v=RWgW-CgdIk0",
+                "https://www.youtube.com/watch?v=a9__D53WsUs",
+                "https://www.youtube.com/watch?v=M988_fsOSWo",
+                "https://www.youtube.com/watch?v=2LaAJq1lB1Q"
+            ]
+        }
+        
+        urls = video_sources.get(program.title, [
+            "https://www.youtube.com/watch?v=rfscVS0vtbw",
+            "https://www.youtube.com/watch?v=fq4N0hgOWzU",
+            "https://www.youtube.com/watch?v=rfscVS0vtbw",
+            "https://www.youtube.com/watch?v=fq4N0hgOWzU"
+        ])
+
+        # Add 4 isolated videos per program
+        for v_idx in range(1, 5):
             video = Video.model_validate({
                 "program_id": program.id,
-                "title": f"Learning {program.title} - Session {v_idx}",
-                "url": "https://www.youtube.com/watch?v=rfscVS0vtbw" if v_idx == 1 else "https://www.youtube.com/watch?v=fq4N0hgOWzU",
-                "duration": "45:00",
+                "title": f"{program.title} - Part {v_idx}",
+                "url": urls[v_idx - 1],
+                "duration": "20:00",
                 "instructor": "Expert Instructor",
                 "order": v_idx
             })

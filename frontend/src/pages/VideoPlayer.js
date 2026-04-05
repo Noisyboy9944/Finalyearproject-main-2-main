@@ -179,6 +179,8 @@ const VideoPlayer = () => {
                         onError={(e) => {
                             if (e && e.name === 'AbortError') {
                                 console.warn('ReactPlayer: Playback aborted due to unmount or rapid navigation.');
+                            } else {
+                                console.error('ReactPlayer Error:', e);
                             }
                         }}
                     />
