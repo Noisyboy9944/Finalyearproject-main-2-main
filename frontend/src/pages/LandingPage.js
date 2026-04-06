@@ -37,22 +37,22 @@ const SHOWCASE_IMAGES = [
 
 const TESTIMONIALS = [
     {
-        name: "Anika Patel",
-        role: "BCA Graduate, 2024",
+        name: "Rahul Kavarippal",
+        role: "BCA Student",
         text: "Unilearn transformed my career. The structured curriculum and AI assistant helped me go from zero to full-stack developer in under a year.",
-        avatar: "A"
+        avatar: "R"
     },
     {
-        name: "James Rodriguez",
-        role: "Data Science Student",
+        name: "Ezekiel Noronha",
+        role: "Graphics designing student",
         text: "The course content is incredibly well-organized. Each unit builds perfectly on the last. The chatbot is like having a personal tutor 24/7.",
-        avatar: "J"
+        avatar: "E"
     },
     {
-        name: "Sarah Kim",
-        role: "MCA Student",
+        name: "Kirti pujari",
+        role: "Digital Marketing student",
         text: "I've tried many platforms, but Unilearn's narrative-driven approach to learning keeps me engaged. The cloud computing modules are exceptional.",
-        avatar: "S"
+        avatar: "K"
     }
 ];
 
@@ -108,20 +108,39 @@ const HOW_IT_WORKS = [
 
 // --- Components ---
 
-const NarrativeSection = ({ step, currentStep, text, title, icon }) => {
-    const distance = Math.abs(currentStep - step);
-    const isActive = distance < 0.7;
-    const isPast = currentStep > step;
+const NarrativeSection = ({ step, scrollYProgress, text, title, icon }) => {
+    const targetProgress = step / 6;
+    const fadeRange = 1.5 / 6;
+    const threshold = 0.5 / 6;
     
+    const opacity = useTransform(
+        scrollYProgress,
+        [targetProgress - fadeRange, targetProgress - threshold, targetProgress + threshold, targetProgress + fadeRange],
+        [0.1, 1, 1, 0]
+    );
+
+    const scale = useTransform(
+        scrollYProgress,
+        [targetProgress - fadeRange, targetProgress - threshold, targetProgress + threshold, targetProgress + fadeRange],
+        [0.9, 1, 1, 0.95]
+    );
+
+    const y = useTransform(
+        scrollYProgress,
+        [targetProgress - fadeRange, targetProgress - threshold, targetProgress + threshold, targetProgress + fadeRange],
+        [40, 0, 0, 40]
+    );
+
+    const filter = useTransform(
+        scrollYProgress,
+        [targetProgress - fadeRange, targetProgress - threshold, targetProgress + threshold, targetProgress + fadeRange],
+        ['blur(8px)', 'blur(0px)', 'blur(0px)', 'blur(12px)']
+    );
+
     return (
         <motion.div 
-            className={`min-h-[60vh] md:min-h-[80vh] flex flex-col justify-center p-6 sm:p-10 md:p-16 w-full max-w-4xl mx-auto transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-                isActive 
-                    ? 'opacity-100 blur-0 scale-100 translate-y-0' 
-                    : isPast
-                        ? 'opacity-0 blur-xl scale-90 translate-y-20'
-                        : 'opacity-10 blur-sm scale-95 translate-y-10'
-            }`}
+            style={{ opacity, scale, y, filter }}
+            className="min-h-[60vh] md:min-h-[80vh] flex flex-col justify-center p-6 sm:p-10 md:p-16 w-full max-w-4xl mx-auto"
         >
             <div className="bg-white/40 backdrop-blur-3xl border border-white/60 p-8 md:p-16 rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] w-full">
                 <div className="mb-6 md:mb-8 inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-3xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 shadow-[inset_0_2px_10px_rgba(255,255,255,0.6)] backdrop-blur-xl border border-white text-marketing-secondary">
@@ -232,19 +251,10 @@ const LandingPage = () => {
         offset: ["start start", "end end"]
     });
 
-    const [activeStep, setActiveStep] = useState(0);
     const [openFAQ, setOpenFAQ] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-
-    useEffect(() => {
-        const unsubscribe = scrollYProgress.on("change", (latest) => {
-            const step = latest * 6; 
-            setActiveStep(step);
-        });
-        return () => unsubscribe();
-    }, [scrollYProgress]);
 
     // Hero Parallax
     const heroRef = useRef(null);
@@ -378,11 +388,11 @@ const LandingPage = () => {
                 
                 {/* Sticky Visual Background */}
                 <div className="sticky top-0 h-screen w-full overflow-hidden -z-10">
-                    <motion.img src={IMAGES.spark} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out" style={{ opacity: activeStep < 1.5 ? 1 : 0 }} alt="" />
-                    <motion.img src={IMAGES.chaos} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out" style={{ opacity: activeStep >= 1.5 && activeStep < 2.5 ? 1 : 0 }} alt="" />
-                    <motion.img src={IMAGES.clarity} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out" style={{ opacity: activeStep >= 2.5 && activeStep < 3.5 ? 1 : 0 }} alt="" />
-                    <motion.img src={IMAGES.community} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out" style={{ opacity: activeStep >= 3.5 && activeStep < 5.5 ? 1 : 0 }} alt="" />
-                    <motion.img src={IMAGES.success} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out" style={{ opacity: activeStep >= 5.5 ? 1 : 0 }} alt="" />
+                    <motion.img src={IMAGES.spark} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: useTransform(scrollYProgress, [0, 1.4/6, 1.5/6], [1, 1, 0]) }} alt="" />
+                    <motion.img src={IMAGES.chaos} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: useTransform(scrollYProgress, [1.4/6, 1.5/6, 2.4/6, 2.5/6], [0, 1, 1, 0]) }} alt="" />
+                    <motion.img src={IMAGES.clarity} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: useTransform(scrollYProgress, [2.4/6, 2.5/6, 3.4/6, 3.5/6], [0, 1, 1, 0]) }} alt="" />
+                    <motion.img src={IMAGES.community} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: useTransform(scrollYProgress, [3.4/6, 3.5/6, 5.4/6, 5.5/6], [0, 1, 1, 0]) }} alt="" />
+                    <motion.img src={IMAGES.success} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: useTransform(scrollYProgress, [5.4/6, 5.5/6, 1], [0, 1, 1]) }} alt="" />
                     <div className="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-transparent md:w-3/4" />
                 </div>
 
@@ -391,31 +401,35 @@ const LandingPage = () => {
                     <div className="h-[50vh]" />
 
                     <NarrativeSection 
-                        step={1} currentStep={activeStep}
+                        step={1} scrollYProgress={scrollYProgress}
                         icon={<Sparkle size={32} />}
                         title="It starts with a question."
                         text="Curiosity is the engine of growth. But in a world of infinite information, where do you even begin?"
                     />
                     <NarrativeSection 
-                        step={2} currentStep={activeStep}
+                        step={2} scrollYProgress={scrollYProgress}
                         icon={<Compass size={32} />}
                         title="The path is often unclear."
                         text="Tutorial hell. Outdated documentation. Disconnected videos. Trying to piece it all together feels like solving a puzzle in the dark."
                     />
                     <NarrativeSection 
-                        step={3} currentStep={activeStep}
+                        step={3} scrollYProgress={scrollYProgress}
                         icon={<Trophy size={32} />}
                         title="Enter Unilearn."
                         text="A structured, crystal-clear curriculum designed to take you from 'Hello World' to 'System Architect'. No fluff, just mastery."
                     />
                     <NarrativeSection 
-                        step={4} currentStep={activeStep}
+                        step={4} scrollYProgress={scrollYProgress}
                         icon={<Users size={32} />}
                         title="You never walk alone."
                         text="Join a global classroom. Debate ideas, review code, and grow alongside thousands of other ambitious minds."
                     />
 
-                    <div id="courses" className={`min-h-screen flex flex-col justify-center p-6 md:p-12 lg:p-16 transition-all duration-700 ${Math.abs(activeStep - 5) < 0.8 ? 'opacity-100 blur-0 translate-y-0' : 'opacity-20 blur-md translate-y-10'}`}>
+                    <motion.div id="courses" style={{
+                        opacity: useTransform(scrollYProgress, [4.2/6, 4.8/6, 5.8/6, 6/6], [0.1, 1, 1, 0.5]),
+                        y: useTransform(scrollYProgress, [4.2/6, 4.8/6, 5.8/6, 6/6], [40, 0, 0, 40]),
+                        filter: useTransform(scrollYProgress, [4.2/6, 4.8/6, 5.8/6, 6/6], ['blur(8px)', 'blur(0px)', 'blur(0px)', 'blur(4px)'])
+                    }} className="min-h-screen flex flex-col justify-center p-6 md:p-12 lg:p-16">
                         <div className="max-w-7xl mx-auto w-full relative z-20">
                             <h2 className="text-3xl md:text-5xl lg:text-6xl font-serif text-gray-900 mb-12 text-center drop-shadow-md tracking-tight font-bold">Master In-Demand Skills</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
@@ -424,10 +438,15 @@ const LandingPage = () => {
                                 ))}
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Final CTA */}
-                    <div className={`min-h-[80vh] flex flex-col justify-center px-4 py-8 md:p-16 max-w-4xl mx-auto transition-all duration-500 ${Math.abs(activeStep - 6) < 0.8 ? 'opacity-100 blur-0 scale-100 translate-y-0' : 'opacity-20 blur-sm scale-95 translate-y-10'}`}>
+                    <motion.div style={{
+                        opacity: useTransform(scrollYProgress, [5.2/6, 5.8/6, 1], [0.1, 1, 1]),
+                        y: useTransform(scrollYProgress, [5.2/6, 5.8/6, 1], [40, 0, 0]),
+                        scale: useTransform(scrollYProgress, [5.2/6, 5.8/6, 1], [0.95, 1, 1]),
+                        filter: useTransform(scrollYProgress, [5.2/6, 5.8/6, 1], ['blur(8px)', 'blur(0px)', 'blur(0px)'])
+                    }} className="min-h-[80vh] flex flex-col justify-center px-4 py-8 md:p-16 max-w-4xl mx-auto">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
@@ -442,7 +461,7 @@ const LandingPage = () => {
                                 Claim Your Spot <CaretRight size={24} weight="bold" />
                             </Link>
                         </motion.div>
-                    </div>
+                    </motion.div>
 
                     <div className="h-[20vh]" />
                 </div>

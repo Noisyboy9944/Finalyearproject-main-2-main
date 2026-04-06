@@ -13,7 +13,8 @@ const VideoPlayer = () => {
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('playlist');
-    const [isPlaying, setIsPlaying] = useState(false);
+    const videoCompletedRef = useRef(false);
+    const [watchedVideos, setWatchedVideos] = useState([]);
 
     // User notes state
     const [userNoteContent, setUserNoteContent] = useState('');
@@ -23,6 +24,8 @@ const VideoPlayer = () => {
     const [isEditing, setIsEditing] = useState(false);
     const saveTimeoutRef = useRef(null);
     const textareaRef = useRef(null);
+    const playerRef = useRef(null);
+    const intervalRef = useRef(null);
 
     const API_URL = process.env.REACT_APP_BACKEND_URL;
     const token = localStorage.getItem('token');
@@ -42,17 +45,26 @@ const VideoPlayer = () => {
                 setProgram(progRes.data);
                 setNotes(notesRes.data);
 
-                // Fetch user's personal note
+                // Fetch user's personal note and progress
                 try {
-                    const userNoteRes = await axios.get(`${API_URL}/api/user-notes/${programId}`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    if (userNoteRes.data) {
+                    const [userNoteRes, progRes] = await Promise.all([
+                        axios.get(`${API_URL}/api/user-notes/${programId}`, {
+                            headers: { Authorization: `Bearer ${token}` }
+                        }).catch(() => null),
+                        axios.get(`${API_URL}/api/progress/videos/${programId}`, {
+                            headers: { Authorization: `Bearer ${token}` }
+                        }).catch(() => null)
+                    ]);
+                    
+                    if (userNoteRes && userNoteRes.data) {
                         setUserNoteContent(userNoteRes.data.content || '');
                         setUserNoteLastSaved(userNoteRes.data.updated_at);
                     }
+                    if (progRes && progRes.data) {
+                        setWatchedVideos(progRes.data.watched_video_ids || []);
+                    }
                 } catch (err) {
-                    // No user note yet - that's fine
+                    console.error("Failed to fetch auxiliary data", err);
                 }
             } catch (err) {
                 console.error(err);
@@ -63,10 +75,119 @@ const VideoPlayer = () => {
         fetchData();
     }, [programId, videoId, API_URL, token]);
 
-    // Reset playing state when video changes
+    const handleVideoComplete = useCallback(async () => {
+        try {
+            await axios.post(`${API_URL}/api/progress/video`, 
+                { video_id: videoId, program_id: programId },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            // Refresh video progress
+            const progRes = await axios.get(`${API_URL}/api/progress/videos/${programId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setWatchedVideos(progRes.data.watched_video_ids || []);
+        } catch (err) {
+            console.error("Failed to mark video as watched", err);
+        }
+    }, [API_URL, programId, token, videoId]);
+
+    const stopTracking = useCallback(() => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+    }, []);
+
+    const startTracking = useCallback(() => {
+        stopTracking();
+        intervalRef.current = setInterval(() => {
+            if (playerRef.current && playerRef.current.getCurrentTime) {
+                const currentTime = playerRef.current.getCurrentTime();
+                const duration = playerRef.current.getDuration();
+                if (duration > 0) {
+                    const played = currentTime / duration;
+                    if (played >= 0.8 && !videoCompletedRef.current && !watchedVideos.includes(videoId)) {
+                        videoCompletedRef.current = true;
+                        handleVideoComplete();
+                        stopTracking();
+                    }
+                }
+            }
+        }, 1000);
+    }, [handleVideoComplete, stopTracking, videoId, watchedVideos]);
+
+    const initPlayer = useCallback(() => {
+        const getYoutubeId = (url) => {
+            if (!url) return null;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        };
+
+        const id = getYoutubeId(currentVideo?.url);
+        if (!id) return;
+
+        if (playerRef.current) {
+            try {
+                playerRef.current.destroy();
+            } catch (e) {}
+        }
+
+        if (window.YT && window.YT.Player) {
+            playerRef.current = new window.YT.Player('youtube-player', {
+                videoId: id,
+                playerVars: {
+                    rel: 0,
+                    modestbranding: 1,
+                    enablejsapi: 1,
+                },
+                events: {
+                    onStateChange: (event) => {
+                        if (event.data === window.YT.PlayerState.PLAYING) {
+                            startTracking();
+                        } else {
+                            stopTracking();
+                        }
+                    }
+                }
+            });
+        }
+    }, [currentVideo, startTracking, stopTracking]);
+
+    // Load YouTube API
     useEffect(() => {
-        setIsPlaying(false);
-    }, [videoId]);
+        if (!window.YT) {
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
+
+        window.onYouTubeIframeAPIReady = () => {
+            initPlayer();
+        };
+
+        if (window.YT && window.YT.Player) {
+            initPlayer();
+        }
+
+        return () => {
+            stopTracking();
+        };
+    }, [videoId, initPlayer, stopTracking]);
+
+    // Re-init when currentVideo is loaded
+    useEffect(() => {
+        if (currentVideo && window.YT && window.YT.Player && !playerRef.current) {
+            initPlayer();
+        }
+    }, [currentVideo, initPlayer]);
+
+    // Reset tracking state when video changes
+    useEffect(() => {
+        videoCompletedRef.current = false;
+        return () => stopTracking();
+    }, [videoId, stopTracking]);
 
     // Auto-save with debounce
     const saveNote = useCallback(async (content) => {
@@ -169,30 +290,21 @@ const VideoPlayer = () => {
                 </Link>
 
                 <div className="bg-black rounded-2xl overflow-hidden shadow-2xl aspect-video w-full relative mb-6">
-                    <ReactPlayer 
-                        url={currentVideo.url} 
-                        width="100%" 
-                        height="100%" 
-                        controls
-                        playing={isPlaying}
-                        onReady={() => setIsPlaying(true)}
-                        onError={(e) => {
-                            if (e && e.name === 'AbortError') {
-                                console.warn('ReactPlayer: Playback aborted due to unmount or rapid navigation.');
-                            } else {
-                                console.error('ReactPlayer Error:', e);
-                            }
-                        }}
-                    />
+                    <div id="youtube-player" className="w-full h-full"></div>
                 </div>
 
-                <div>
-                    <h1 className="text-2xl font-serif font-bold text-lms-fg mb-2">{currentVideo.title}</h1>
-                    <div className="flex items-center gap-4 text-sm text-lms-muted font-mono">
-                        <span>{currentVideo.instructor}</span>
-                        <span>•</span>
-                        <span>{currentVideo.duration}</span>
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl font-serif font-bold text-lms-fg mb-2">{currentVideo.title}</h1>
                     </div>
+                    {watchedVideos.includes(videoId) && (
+                        <Link
+                            to={`/app/program/${programId}/quiz`}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl shadow-lg hover:scale-105 transition-all animate-fade-in-up"
+                        >
+                            <CheckCircle size={22} weight="fill" /> Proceed to Quiz
+                        </Link>
+                    )}
                 </div>
             </div>
 
@@ -245,26 +357,43 @@ const VideoPlayer = () => {
                             </div>
                             {playlist.map((video) => {
                                 const isActive = video.id === currentVideo.id;
+                                const isWatched = watchedVideos.includes(video.id);
                                 return (
                                     <Link 
                                         key={video.id}
                                         to={`/app/program/${programId}/video/${video.id}`}
                                         className={clsx(
-                                            "flex items-start gap-3 p-3 rounded-lg transition-colors",
-                                            isActive ? "bg-lms-primary/10 border border-lms-primary/20" : "hover:bg-slate-50"
+                                            "flex items-start gap-3 p-3 rounded-lg transition-colors border",
+                                            isActive 
+                                                ? "bg-lms-primary/10 border-lms-primary/20" 
+                                                : isWatched 
+                                                    ? "bg-emerald-50/30 border-emerald-100 hover:bg-emerald-50/50" 
+                                                    : "bg-transparent border-transparent hover:bg-slate-50"
                                         )}
                                     >
                                         <div className={clsx(
                                             "w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5",
-                                            isActive ? "bg-lms-primary text-white" : "bg-slate-200 text-slate-500"
+                                            isActive 
+                                                ? "bg-lms-primary text-white" 
+                                                : isWatched 
+                                                    ? "bg-emerald-500 text-white" 
+                                                    : "bg-slate-200 text-slate-500"
                                         )}>
-                                            {isActive ? <Play size={12} weight="fill" /> : <span className="text-xs font-mono">{video.order}</span>}
+                                            {isActive ? <Play size={12} weight="fill" /> : isWatched ? <CheckCircle size={14} weight="fill" /> : <span className="text-xs font-mono">{video.order}</span>}
                                         </div>
-                                        <div>
-                                            <h4 className={clsx("text-sm font-medium leading-tight mb-1", isActive ? "text-lms-primary" : "text-lms-fg")}>
+                                        <div className="flex-1">
+                                            <h4 className={clsx(
+                                                "text-sm font-medium leading-tight mb-0.5", 
+                                                isActive ? "text-lms-primary" : isWatched ? "text-emerald-900" : "text-gray-900"
+                                            )}>
                                                 {video.title}
                                             </h4>
-                                            <p className="text-xs text-lms-muted">{video.duration}</p>
+                                            <div className="flex items-center gap-2">
+                                                <p className="text-xs text-lms-muted font-mono">{video.duration}</p>
+                                                {isWatched && (
+                                                    <span className="text-[8px] font-bold uppercase tracking-tighter text-emerald-600 bg-emerald-100 px-1 rounded">Done</span>
+                                                )}
+                                            </div>
                                         </div>
                                     </Link>
                                 );

@@ -11,7 +11,10 @@ const Auth = ({ type }) => {
     const [formData, setFormData] = useState({
         full_name: '',
         email: '',
-        password: ''
+        password: '',
+        phone_number: '',
+        gender: '',
+        address: ''
     });
     const [loading, setLoading] = useState(false);
 
@@ -62,15 +65,52 @@ const Auth = ({ type }) => {
 
                 <form onSubmit={handleSubmit} className="space-y-6 font-mono">
                     {type === 'register' && (
-                        <div>
-                            <label className="block text-sm text-gray-500 mb-2">Full Name</label>
-                            <input 
-                                type="text"
-                                required
-                                className="w-full bg-white/50 backdrop-blur-sm border border-white/50 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-marketing-secondary focus:ring-2 focus:ring-marketing-secondary/20 transition-all shadow-inner"
-                                onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-                            />
-                        </div>
+                        <>
+                            <div>
+                                <label className="block text-sm text-gray-500 mb-2">Full Name</label>
+                                <input 
+                                    type="text"
+                                    required
+                                    className="w-full bg-white/50 backdrop-blur-sm border border-white/50 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-marketing-secondary focus:ring-2 focus:ring-marketing-secondary/20 transition-all shadow-inner"
+                                    onChange={(e) => setFormData({...formData, full_name: e.target.value})}
+                                />
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm text-gray-500 mb-2">Phone Number</label>
+                                    <input 
+                                        type="tel"
+                                        required
+                                        className="w-full bg-white/50 backdrop-blur-sm border border-white/50 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-marketing-secondary focus:ring-2 focus:ring-marketing-secondary/20 transition-all shadow-inner"
+                                        onChange={(e) => setFormData({...formData, phone_number: e.target.value})}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-gray-500 mb-2">Gender</label>
+                                    <select 
+                                        required
+                                        className="w-full bg-white/50 backdrop-blur-sm border border-white/50 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-marketing-secondary focus:ring-2 focus:ring-marketing-secondary/20 transition-all shadow-inner appearance-none"
+                                        onChange={(e) => setFormData({...formData, gender: e.target.value})}
+                                        defaultValue=""
+                                    >
+                                        <option value="" disabled>Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                        <option value="Prefer not to say">Prefer not to say</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm text-gray-500 mb-2">Address</label>
+                                <textarea 
+                                    required
+                                    rows="2"
+                                    className="w-full bg-white/50 backdrop-blur-sm border border-white/50 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:border-marketing-secondary focus:ring-2 focus:ring-marketing-secondary/20 transition-all shadow-inner resize-none"
+                                    onChange={(e) => setFormData({...formData, address: e.target.value})}
+                                ></textarea>
+                            </div>
+                        </>
                     )}
                     <div>
                         <label className="block text-sm text-gray-500 mb-2">Email Address</label>

@@ -70,6 +70,9 @@ class User(BaseModel):
     email: EmailStr
     password_hash: str
     full_name: str
+    phone_number: Optional[str] = None
+    gender: Optional[str] = None
+    address: Optional[str] = None
     role: str = "student"
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -79,6 +82,9 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     full_name: str
+    phone_number: Optional[str] = None
+    gender: Optional[str] = None
+    address: Optional[str] = None
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -234,7 +240,10 @@ async def register(user: UserCreate):
     user_obj = User.model_validate({
         "email": user.email,
         "password_hash": get_password_hash(user.password),
-        "full_name": user.full_name
+        "full_name": user.full_name,
+        "phone_number": user.phone_number,
+        "gender": user.gender,
+        "address": user.address
     })
     
     doc = user_obj.model_dump()
@@ -692,12 +701,11 @@ async def get_program_quiz(program_id: str, user_email: str = Depends(get_curren
     if not quiz:
         # Generate dummy quiz if none exists
         quiz = {
-            "id": str(uuid.uuid4()),
             "program_id": program_id,
             "questions": [
                 {
                     "id": str(uuid.uuid4()),
-                    "text": "What is the primary topic of this unit?",
+                    "text": "What is the main goal of this program?",
                     "options": ["Introduction", "Advanced Concepts", "Conclusion", "None of the above"],
                     "correct_option_index": 0
                 },
@@ -709,8 +717,7 @@ async def get_program_quiz(program_id: str, user_email: str = Depends(get_curren
                 }
             ]
         }
-        await db.quizzes.insert_one(quiz)
-        quiz.pop("_id", None)
+        await db.quizzes.insert_one(quiz.copy())
     
     # Check if user has already passed
     progress = await db.quiz_progress.find_one({
@@ -866,28 +873,45 @@ async def get_my_enrollments(user_email: str = Depends(get_current_user)):
     enrollments = await db.enrollments.find({"user_email": user_email}, {"_id": 0}).to_list(100)
     result = []
     for enr in enrollments:
-        program = await db.programs.find_one({"id": enr["program_id"]}, {"_id": 0})
+        program_id = enr["program_id"]
+        program = await db.programs.find_one({"id": program_id}, {"_id": 0})
         if not program:
             continue
-        passed = await db.quiz_progress.count_documents({"user_email": user_email, "program_id": enr["program_id"], "passed": True})
-        progress_pct = 100 if passed > 0 else 0
+            
+        # 50% for Videos
+        total_videos = await db.videos.count_documents({"program_id": program_id})
+        watched_count = await db.video_progress.count_documents({"user_email": user_email, "program_id": program_id})
+        video_score = (watched_count / total_videos * 50) if total_videos > 0 else 50
+        
+        # 50% for Quiz
+        passed = await db.quiz_progress.count_documents({"user_email": user_email, "program_id": program_id, "passed": True})
+        quiz_score = 50 if passed > 0 else 0
+        
+        progress_pct = round(video_score + quiz_score, 1)
         result.append({**program, "progress": progress_pct, "enrolled_at": enr["enrolled_at"]})
     return result
 
 @api_router.get("/enrollments/progress/{program_id}")
 async def get_program_progress(program_id: str, user_email: str = Depends(get_current_user)):
-    passed = await db.quiz_progress.count_documents({"user_email": user_email, "program_id": program_id, "passed": True})
-    progress_pct = 100 if passed > 0 else 0
-    
-    watched_videos = await db.video_progress.count_documents({"user_email": user_email, "program_id": program_id})
+    # 50% for Videos
     total_videos = await db.videos.count_documents({"program_id": program_id})
-    all_videos_completed = (watched_videos >= total_videos) and (total_videos > 0)
+    watched = await db.video_progress.find({"user_email": user_email, "program_id": program_id}).to_list(100)
+    watched_ids = [w["video_id"] for w in watched]
+    video_score = (len(watched_ids) / total_videos * 50) if total_videos > 0 else 50
+    
+    # 50% for Quiz
+    passed = await db.quiz_progress.count_documents({"user_email": user_email, "program_id": program_id, "passed": True})
+    quiz_score = 50 if passed > 0 else 0
+    
+    total_progress = round(video_score + quiz_score, 1)
+    all_videos_completed = (len(watched_ids) >= total_videos) and (total_videos > 0)
     
     return {
         "total_units": 1, 
         "passed_quizzes": passed, 
-        "progress": progress_pct,
-        "all_videos_completed": all_videos_completed
+        "progress": total_progress,
+        "all_videos_completed": all_videos_completed,
+        "watched_ids": watched_ids
     }
 
 # --- Profile ---
@@ -913,10 +937,20 @@ async def get_user_profile(user_email: str = Depends(get_current_user)):
 
 @api_router.put("/profile")
 async def update_user_profile(profile_data: dict, user_email: str = Depends(get_current_user)):
+    update_fields = {}
     if "full_name" in profile_data:
+        update_fields["full_name"] = profile_data["full_name"]
+    if "phone_number" in profile_data:
+        update_fields["phone_number"] = profile_data["phone_number"]
+    if "gender" in profile_data:
+        update_fields["gender"] = profile_data["gender"]
+    if "address" in profile_data:
+        update_fields["address"] = profile_data["address"]
+        
+    if update_fields:
         await db.users.update_one(
             {"email": user_email},
-            {"$set": {"full_name": profile_data["full_name"]}}
+            {"$set": update_fields}
         )
     user = await db.users.find_one({"email": user_email}, {"_id": 0, "password_hash": 0})
     return {"message": "Profile updated", "user": user}
@@ -965,52 +999,28 @@ async def seed_data():
 
         video_sources = {
             "Graphic designing": [
-                "https://www.youtube.com/watch?v=WONcVOU5Cns",
-                "https://www.youtube.com/watch?v=sByzHoiY3s4",
-                "https://www.youtube.com/watch?v=YqQx75OPRa0",
-                "https://www.youtube.com/watch?v=3MneXJv1xR0"
+                "https://youtu.be/loQ5X5-67so"
             ],
             "C programming": [
-                "https://www.youtube.com/watch?v=KJgsSFOSQv0",
-                "https://www.youtube.com/watch?v=87SH2Cn0s9A",
-                "https://www.youtube.com/watch?v=vLnPwxZdW4Y",
-                "https://www.youtube.com/watch?v=ZSPZob_1TOk"
+                "https://youtu.be/irqbmMNs2Bo"
             ],
             "Digital marketing": [
-                "https://www.youtube.com/watch?v=bixR-KIJKYM",
-                "https://www.youtube.com/watch?v=nU-IIXBWlS4",
-                "https://www.youtube.com/watch?v=Zqg1X9rX52s",
-                "https://www.youtube.com/watch?v=hGzD_14rG5I"
+                "https://youtu.be/owMvu6ks29E"
             ],
             "Ui/Ux": [
-                "https://www.youtube.com/watch?v=c9Wg6Cb_YlU",
-                "https://www.youtube.com/watch?v=zHAa-m16NQk",
-                "https://www.youtube.com/watch?v=y29XNO1TjWM",
-                "https://www.youtube.com/watch?v=qA2y1dF0OIM"
+                "https://youtu.be/MBblN98-5lg"
             ],
             "Python": [
-                "https://www.youtube.com/watch?v=_uQrJ0TkZlc",
-                "https://www.youtube.com/watch?v=kqtD5dpn9C8",
-                "https://www.youtube.com/watch?v=Z1Yd7upQsXY",
-                "https://www.youtube.com/watch?v=QXeEoD0pB3E"
+                "https://youtu.be/UrsmFxEIp5k"
             ],
             "MYSQL": [
-                "https://www.youtube.com/watch?v=7S_tz1z_5bA",
-                "https://www.youtube.com/watch?v=HXV3zeQKqGY",
-                "https://www.youtube.com/watch?v=WmGcxfkWOXY",
-                "https://www.youtube.com/watch?v=qw--VYLpxG4"
+                "https://youtu.be/7S_tz1z_5bA"
             ],
             "DSA": [
-                "https://www.youtube.com/watch?v=8hly31xKli0",
-                "https://www.youtube.com/watch?v=RBSGKlAvoiM",
-                "https://www.youtube.com/watch?v=zg9ih6SVACc",
-                "https://www.youtube.com/watch?v=AT14lCXuMKI"
+                "https://youtu.be/J2fol8eWo64"
             ],
             "Cloud computing": [
-                "https://www.youtube.com/watch?v=RWgW-CgdIk0",
-                "https://www.youtube.com/watch?v=a9__D53WsUs",
-                "https://www.youtube.com/watch?v=M988_fsOSWo",
-                "https://www.youtube.com/watch?v=2LaAJq1lB1Q"
+                "https://youtu.be/E-bNlmja0j8"
             ]
         }
         
@@ -1021,17 +1031,16 @@ async def seed_data():
             "https://www.youtube.com/watch?v=fq4N0hgOWzU"
         ])
 
-        # Add 4 isolated videos per program
-        for v_idx in range(1, 5):
-            video = Video.model_validate({
-                "program_id": program.id,
-                "title": f"{program.title} - Part {v_idx}",
-                "url": urls[v_idx - 1],
-                "duration": "20:00",
-                "instructor": "Expert Instructor",
-                "order": v_idx
-            })
-            await db.videos.insert_one(video.model_dump())
+        # Add a single video per program
+        video = Video.model_validate({
+            "program_id": program.id,
+            "title": program.title,
+            "url": urls[0],
+            "duration": "20:00",
+            "instructor": "Expert Instructor",
+            "order": 1
+        })
+        await db.videos.insert_one(video.model_dump())
 
         # Add 1 Course Note directly
         note = CourseNote.model_validate({
@@ -1047,13 +1056,6 @@ async def seed_data():
             "program_id": program.id,
             "questions": [
                 {
-                    "id": str(uuid.uuid4()),
-                    "text": f"What is a primary concept discussed in {program.title}?",
-                    "options": ["Concept A", "Concept B", "The Core Principle", "None of the above"],
-                    "correct_option_index": 2
-                },
-                {
-                    "id": str(uuid.uuid4()),
                     "text": f"Which tool is commonly used in {program.title}?",
                     "options": ["Tool X", "Tool Y", "Standard Toolkit", "No tools needed"],
                     "correct_option_index": 2

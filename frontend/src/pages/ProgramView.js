@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { ArrowLeft, BookOpen, CaretRight, Certificate, GraduationCap, CheckCircle, Lock } from '@phosphor-icons/react';
+import clsx from 'clsx';
 
 const ProgramView = () => {
     const { programId } = useParams();
@@ -148,22 +149,55 @@ const ProgramView = () => {
                     <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
                         <BookOpen className="text-lms-primary" /> Course Content
                     </h2>
-                    <div className="flex flex-col gap-4">
-                        {videos.map((video, idx) => (
-                            <Link
-                                to={`/app/program/${programId}/video/${video.id}`}
-                                key={video.id}
-                                className="bg-white/50 backdrop-blur-xl border border-white/60 rounded-xl p-6 hover:border-lms-primary/40 hover:shadow-lg transition-all group"
-                            >
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <h3 className="font-bold text-lg text-gray-900 mb-1 group-hover:text-lms-primary transition-colors">{idx + 1}. {video.title}</h3>
-                                        <p className="text-sm text-gray-500 font-mono">{video.duration} • Instructor: {video.instructor}</p>
+                    <div className="relative flex flex-col gap-6 ml-6">
+                        {/* Vertical Timeline Line */}
+                        <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-indigo-100/50" />
+
+                        {videos.map((video, idx) => {
+                            const isWatched = progress?.watched_ids?.includes(video.id);
+                            return (
+                                <Link
+                                    to={`/app/program/${programId}/video/${video.id}`}
+                                    key={video.id}
+                                    className={clsx(
+                                        "relative z-10 backdrop-blur-xl border rounded-[1.5rem] p-5 transition-all group flex items-center justify-between shadow-sm hover:shadow-md",
+                                        isWatched 
+                                            ? "bg-emerald-50/40 border-emerald-100 hover:border-emerald-200" 
+                                            : "bg-white/70 border-white/60 hover:border-lms-primary/40"
+                                    )}
+                                >
+                                    <div className="flex items-center gap-6">
+                                        <div className={clsx(
+                                            "w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 font-bold text-lg transition-transform group-hover:scale-105",
+                                            isWatched ? "bg-emerald-500 text-white shadow-emerald-200 shadow-lg" : "bg-white text-lms-primary shadow-md border border-indigo-50"
+                                        )}>
+                                            {isWatched ? <CheckCircle size={24} weight="fill" /> : idx + 1}
+                                        </div>
+                                        <div>
+                                            <h3 className={clsx(
+                                                "font-bold text-lg transition-colors",
+                                                isWatched ? "text-emerald-900" : "text-gray-900 group-hover:text-lms-primary"
+                                            )}>
+                                                {video.title}
+                                            </h3>
+                                        </div>
                                     </div>
-                                    <CaretRight className="text-gray-400 group-hover:translate-x-1 transition-transform mt-1" />
-                                </div>
-                            </Link>
-                        ))}
+                                    <div className="flex items-center gap-4">
+                                        {isWatched && (
+                                            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 bg-emerald-100/50 px-2.5 py-1 rounded-lg border border-emerald-200">
+                                                Completed
+                                            </span>
+                                        )}
+                                        <div className={clsx(
+                                            "w-8 h-8 rounded-full flex items-center justify-center transition-all",
+                                            isWatched ? "bg-emerald-100 text-emerald-600" : "bg-slate-50 text-slate-400 group-hover:bg-lms-primary/10 group-hover:text-lms-primary"
+                                        )}>
+                                            <CaretRight size={18} weight="bold" className="group-hover:translate-x-0.5 transition-transform" />
+                                        </div>
+                                    </div>
+                                </Link>
+                            );
+                        })}
                         
                         {/* Course Quiz */}
                         {progress?.all_videos_completed ? (

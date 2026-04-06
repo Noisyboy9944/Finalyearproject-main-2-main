@@ -11,6 +11,9 @@ const Profile = () => {
     
     const [isEditing, setIsEditing] = useState(false);
     const [editName, setEditName] = useState('');
+    const [editPhone, setEditPhone] = useState('');
+    const [editGender, setEditGender] = useState('');
+    const [editAddress, setEditAddress] = useState('');
     const [saveLoading, setSaveLoading] = useState(false);
 
     const [enrolledCourses, setEnrolledCourses] = useState([]);
@@ -27,6 +30,9 @@ const Profile = () => {
                 ]);
                 setProfile(profileRes.data);
                 setEditName(profileRes.data.user.full_name || '');
+                setEditPhone(profileRes.data.user.phone_number || '');
+                setEditGender(profileRes.data.user.gender || '');
+                setEditAddress(profileRes.data.user.address || '');
                 setEnrolledCourses(enrollRes.data);
             } catch (err) {
                 console.error("Failed to fetch profile", err);
@@ -43,7 +49,12 @@ const Profile = () => {
             const API_URL = process.env.REACT_APP_BACKEND_URL;
             const token = localStorage.getItem('token');
             const res = await axios.put(`${API_URL}/api/profile`, 
-                { full_name: editName },
+                { 
+                    full_name: editName,
+                    phone_number: editPhone,
+                    gender: editGender,
+                    address: editAddress
+                },
                 { headers: { 'Authorization': `Bearer ${token}` } }
             );
             setProfile({ ...profile, user: res.data.user });
@@ -138,6 +149,60 @@ const Profile = () => {
                                 ) : (
                                     <div className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl text-gray-900 font-medium">
                                         {profile.user.full_name}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Phone Number</label>
+                                    {isEditing ? (
+                                        <input 
+                                            type="tel" 
+                                            value={editPhone}
+                                            onChange={(e) => setEditPhone(e.target.value)}
+                                            className="w-full px-4 py-3 bg-white border border-indigo-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+                                        />
+                                    ) : (
+                                        <div className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl text-gray-900 font-medium whitespace-pre-wrap min-h-[48px]">
+                                            {profile.user.phone_number || <span className="text-gray-400 italic">Not provided</span>}
+                                        </div>
+                                    )}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Gender</label>
+                                    {isEditing ? (
+                                        <select 
+                                            value={editGender}
+                                            onChange={(e) => setEditGender(e.target.value)}
+                                            className="w-full px-4 py-3 bg-white border border-indigo-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium cursor-pointer"
+                                        >
+                                            <option value="" disabled>Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                            <option value="Prefer not to say">Prefer not to say</option>
+                                        </select>
+                                    ) : (
+                                        <div className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl text-gray-900 font-medium whitespace-pre-wrap min-h-[48px]">
+                                            {profile.user.gender || <span className="text-gray-400 italic">Not provided</span>}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Address</label>
+                                {isEditing ? (
+                                    <textarea 
+                                        rows="2"
+                                        value={editAddress}
+                                        onChange={(e) => setEditAddress(e.target.value)}
+                                        className="w-full px-4 py-3 bg-white border border-indigo-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium resize-none"
+                                    />
+                                ) : (
+                                    <div className="w-full px-4 py-3 bg-gray-50 border border-transparent rounded-xl text-gray-900 font-medium whitespace-pre-wrap min-h-[48px]">
+                                        {profile.user.address || <span className="text-gray-400 italic">Not provided</span>}
                                     </div>
                                 )}
                             </div>
