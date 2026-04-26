@@ -266,12 +266,12 @@ const LandingPage = () => {
     const heroOpacity = useTransform(heroProgress, [0, 0.5], [1, 0]);
 
     return (
-        <div className="bg-white text-gray-900 font-sans selection:bg-marketing-secondary selection:text-white relative">
+        <div className="bg-white text-gray-900 font-sans selection:bg-marketing-secondary selection:text-white relative overflow-x-hidden">
             <LiquidBackground />
             
             {/* Navigation */}
-            <nav className="fixed w-full z-50 px-6 py-4 flex justify-between items-center bg-white/30 backdrop-blur-3xl border-b border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
-                <div className="text-2xl font-serif font-bold text-gray-900 tracking-tighter drop-shadow-sm">Unilearn</div>
+            <nav className="fixed w-full z-50 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center bg-white/30 backdrop-blur-3xl border-b border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
+                <div className="text-xl sm:text-2xl font-serif font-bold text-gray-900 tracking-tighter drop-shadow-sm">Unilearn</div>
                 
                 {/* Desktop Menu */}
                 <div className="hidden lg:flex items-center gap-8 text-sm font-mono text-gray-700 font-medium">
@@ -293,34 +293,64 @@ const LandingPage = () => {
                 {/* Mobile Menu Toggle */}
                 <button 
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="lg:hidden p-2 text-gray-900 z-50"
+                    className={`lg:hidden relative z-50 w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-300 ${isMenuOpen ? 'bg-white/20' : 'bg-white/10'}`}
+                    aria-label="Toggle menu"
                 >
-                    <div className="w-6 h-5 flex flex-col justify-between relative">
-                        <span className={`w-full h-0.5 bg-gray-900 rounded-full transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-                        <span className={`w-full h-0.5 bg-gray-900 rounded-full transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`} />
-                        <span className={`w-full h-0.5 bg-gray-900 rounded-full transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+                    <div className="w-5 h-4 flex flex-col justify-between">
+                        <span className={`w-full h-0.5 rounded-full transition-all duration-300 ${isMenuOpen ? 'bg-white rotate-45 translate-y-[7px]' : 'bg-gray-900'}`} />
+                        <span className={`w-full h-0.5 rounded-full transition-all duration-300 ${isMenuOpen ? 'opacity-0 bg-white' : 'bg-gray-900'}`} />
+                        <span className={`w-full h-0.5 rounded-full transition-all duration-300 ${isMenuOpen ? 'bg-white -rotate-45 -translate-y-[9px]' : 'bg-gray-900'}`} />
                     </div>
                 </button>
 
-                {/* Mobile Menu Overlay */}
+                {/* Liquid Glass Mobile Menu Overlay */}
                 <motion.div 
                     initial={false}
-                    animate={{ x: isMenuOpen ? 0 : '100%' }}
-                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                    className="fixed inset-0 bg-white/95 backdrop-blur-2xl z-40 lg:hidden flex flex-col items-center justify-center gap-8 p-10"
+                    animate={{ opacity: isMenuOpen ? 1 : 0, x: isMenuOpen ? 0 : '100%' }}
+                    transition={{ type: 'spring', damping: 28, stiffness: 220 }}
+                    className="fixed inset-0 z-40 lg:hidden flex flex-col items-center justify-center gap-10 p-8"
+                    style={{
+                        background: 'rgba(99, 102, 241, 0.12)',
+                        backdropFilter: 'blur(32px) saturate(200%) brightness(1.05)',
+                        WebkitBackdropFilter: 'blur(32px) saturate(200%) brightness(1.05)',
+                        borderLeft: '1px solid rgba(255,255,255,0.3)',
+                    }}
                 >
-                    <div className="flex flex-col items-center gap-6 text-xl font-serif font-bold text-gray-800">
-                        <a href="#how-it-works" onClick={() => setIsMenuOpen(false)}>How It Works</a>
-                        <a href="#courses" onClick={() => setIsMenuOpen(false)}>Courses</a>
-                        <a href="#testimonials" onClick={() => setIsMenuOpen(false)}>Reviews</a>
-                        <a href="#faq" onClick={() => setIsMenuOpen(false)}>FAQ</a>
+                    {/* Decorative glow blobs */}
+                    <div className="absolute top-20 left-10 w-48 h-48 rounded-full bg-marketing-secondary/10 blur-3xl pointer-events-none" />
+                    <div className="absolute bottom-20 right-10 w-48 h-48 rounded-full bg-marketing-accent/10 blur-3xl pointer-events-none" />
+
+                    <div className="text-2xl font-serif font-bold text-gray-900 tracking-tighter mb-4">Unilearn</div>
+
+                    <div className="flex flex-col items-center gap-5 w-full">
+                        {['#how-it-works', '#courses', '#testimonials', '#faq'].map((href, i) => (
+                            <a
+                                key={href}
+                                href={href}
+                                onClick={() => setIsMenuOpen(false)}
+                                className="w-full text-center py-3.5 px-6 rounded-2xl text-lg font-serif font-semibold text-gray-900 transition-all"
+                                style={{ background: 'rgba(255,255,255,0.25)', border: '1px solid rgba(255,255,255,0.4)' }}
+                            >
+                                {['How It Works', 'Courses', 'Reviews', 'FAQ'][i]}
+                            </a>
+                        ))}
                     </div>
-                    <div className="flex flex-col gap-4 w-full max-w-xs">
-                        <Link to="/login" onClick={() => setIsMenuOpen(false)} className="w-full text-center px-6 py-4 rounded-xl border border-gray-300 text-gray-700 font-mono">
+
+                    <div className="flex flex-col gap-3 w-full">
+                        <Link
+                            to="/login"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="w-full text-center px-6 py-4 rounded-2xl font-mono font-medium text-gray-800 transition-all"
+                            style={{ background: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.6)' }}
+                        >
                             Login
                         </Link>
-                        <Link to="/register" onClick={() => setIsMenuOpen(false)} className="w-full text-center px-6 py-4 rounded-xl bg-marketing-secondary text-white font-mono font-bold">
-                            Start Learning
+                        <Link
+                            to="/register"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="w-full text-center px-6 py-4 rounded-2xl bg-marketing-secondary text-white font-mono font-bold shadow-lg shadow-marketing-secondary/30 hover:scale-105 transition-transform"
+                        >
+                            Start Learning Free
                         </Link>
                     </div>
                 </motion.div>
@@ -333,14 +363,14 @@ const LandingPage = () => {
                     <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] brightness-100 contrast-150 mix-blend-multiply"></div>
                 </div>
 
-                <motion.div style={{ y: heroY, opacity: heroOpacity }} className="z-10 text-center px-6 max-w-5xl">
+                <motion.div style={{ y: heroY, opacity: heroOpacity }} className="z-10 text-center px-4 sm:px-6 max-w-5xl w-full">
                     <motion.div 
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 1.2, ease: "easeOut" }}
-                        className="mb-8 inline-block"
+                        className="mb-6 sm:mb-8 inline-block"
                     >
-                        <span className="px-4 py-2 rounded-full border border-marketing-secondary/30 text-marketing-secondary bg-marketing-secondary/5 font-mono text-sm tracking-widest uppercase">
+                        <span className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-marketing-secondary/30 text-marketing-secondary bg-marketing-secondary/5 font-mono text-xs sm:text-sm tracking-widest uppercase">
                             The Journey Begins Here
                         </span>
                     </motion.div>
@@ -349,7 +379,7 @@ const LandingPage = () => {
                         initial={{ y: 50, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.2, duration: 1 }}
-                        className="text-5xl sm:text-7xl md:text-9xl font-serif font-medium text-gray-900 mb-8 leading-none"
+                        className="text-[2.6rem] leading-[1.1] sm:text-6xl md:text-8xl lg:text-9xl font-serif font-medium text-gray-900 mb-6 sm:mb-8"
                     >
                         Knowledge <br/> 
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-marketing-secondary to-marketing-accent">
@@ -361,24 +391,35 @@ const LandingPage = () => {
                         initial={{ y: 20, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ delay: 0.5, duration: 1 }}
-                        className="text-xl md:text-2xl text-gray-500 max-w-2xl mx-auto font-mono mb-12"
+                        className="text-base sm:text-lg md:text-2xl text-gray-500 max-w-2xl mx-auto font-mono mb-8 sm:mb-12 px-2"
                     >
                         Every expert was once a beginner who just refused to quit.
                     </motion.p>
-                    
+
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 1, duration: 1 }}
+                        className="flex flex-col items-center gap-6 sm:gap-8"
                     >
-                        <span className="text-sm font-mono text-gray-400">Scroll to unfold the story</span>
-                        <motion.div 
-                            animate={{ y: [0, 10, 0] }}
-                            transition={{ repeat: Infinity, duration: 2 }}
-                            className="mt-4 flex justify-center text-gray-400"
-                        >
-                            <CaretRight size={24} className="rotate-90" />
-                        </motion.div>
+                        <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs sm:max-w-none sm:w-auto">
+                            <Link to="/register" className="px-8 py-3.5 rounded-full bg-marketing-secondary text-white font-mono font-bold hover:scale-105 transition-transform shadow-lg shadow-marketing-secondary/30 text-sm sm:text-base">
+                                Start Learning Free
+                            </Link>
+                            <Link to="/login" className="px-8 py-3.5 rounded-full border border-gray-300 text-gray-700 font-mono hover:bg-gray-50 transition-colors text-sm sm:text-base">
+                                Sign In
+                            </Link>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <span className="text-xs sm:text-sm font-mono text-gray-400">Scroll to unfold the story</span>
+                            <motion.div 
+                                animate={{ y: [0, 8, 0] }}
+                                transition={{ repeat: Infinity, duration: 2 }}
+                                className="mt-2 flex justify-center text-gray-400"
+                            >
+                                <CaretRight size={20} className="rotate-90" />
+                            </motion.div>
+                        </div>
                     </motion.div>
                 </motion.div>
             </section>
