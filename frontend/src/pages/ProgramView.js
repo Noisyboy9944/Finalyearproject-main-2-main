@@ -51,6 +51,7 @@ const ProgramView = () => {
             }
         };
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [programId]);
 
     const handleEnroll = async () => {
