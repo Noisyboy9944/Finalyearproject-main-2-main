@@ -21,10 +21,27 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 load_dotenv(ROOT_DIR.parent / '.env') # Fallback to root .env
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+# MongoDB connection — cached globally to survive warm serverless instances
+_mongo_client = None
+_db = None
+
+def get_db():
+    global _mongo_client, _db
+    if _mongo_client is None:
+        mongo_url = os.environ.get('MONGO_URL', '')
+        db_name = os.environ.get('DB_NAME', 'unilearn_db')
+        _mongo_client = AsyncIOMotorClient(
+            mongo_url,
+            maxPoolSize=10,
+            minPoolSize=1,
+            serverSelectionTimeoutMS=5000,
+            connectTimeoutMS=5000,
+        )
+        _db = _mongo_client[db_name]
+    return _db
+
+db = get_db()
+
 
 # Auth Config
 SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "your-secret-key-change-in-production")

@@ -1,18 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Lenis as ReactLenis } from 'lenis/react';
 
-// Pages
-import LandingPage from "./pages/LandingPage";
-import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
-import ProgramView from "./pages/ProgramView";
-import VideoPlayer from "./pages/VideoPlayer";
-import ExploreCourses from "./pages/ExploreCourses";
-import QuizView from "./pages/QuizView";
-import CertificateView from "./pages/CertificateView";
-import Profile from "./pages/Profile";
-import Layout from "./components/Layout";
+// Lazy-loaded Pages (code splitting for faster initial load)
+const LandingPage = lazy(() => import("./pages/LandingPage"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const ProgramView = lazy(() => import("./pages/ProgramView"));
+const VideoPlayer = lazy(() => import("./pages/VideoPlayer"));
+const ExploreCourses = lazy(() => import("./pages/ExploreCourses"));
+const QuizView = lazy(() => import("./pages/QuizView"));
+const CertificateView = lazy(() => import("./pages/CertificateView"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Layout = lazy(() => import("./components/Layout"));
+
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
@@ -35,6 +36,7 @@ function App() {
     <ReactLenis root>
         <BrowserRouter>
             <ScrollToTop />
+            <Suspense fallback={<div style={{display:'flex',height:'100vh',alignItems:'center',justifyContent:'center',background:'#f8f9fa'}}><div style={{width:40,height:40,border:'3px solid #e5e7eb',borderTop:'3px solid #6366f1',borderRadius:'50%',animation:'spin 0.8s linear infinite'}}/><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>}>
             <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<LandingPage />} />
@@ -52,6 +54,7 @@ function App() {
                     <Route path="profile" element={<Profile />} />
                 </Route>
             </Routes>
+            </Suspense>
         </BrowserRouter>
     </ReactLenis>
   );
