@@ -1,4 +1,10 @@
 {
+  "name": "final-year-project",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npm run build --prefix frontend",
+    "start": "npm start --prefix frontend"
+  },
   "dependencies": {
     "react-scripts": "^5.0.1"
   }

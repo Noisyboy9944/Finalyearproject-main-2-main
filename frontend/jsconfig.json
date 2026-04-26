@@ -3,6 +3,7 @@
     "target": "ES6",
     "lib": ["es6", "dom"],
     "baseUrl": ".",
+    "skipLibCheck": true,
     "paths": {
       "@/*": ["src/*"]
     }
