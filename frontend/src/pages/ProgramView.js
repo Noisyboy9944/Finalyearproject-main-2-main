@@ -15,7 +15,7 @@ const ProgramView = () => {
     const [progress, setProgress] = useState(null);
     const [enrolling, setEnrolling] = useState(false);
 
-    const API_URL = process.env.REACT_APP_BACKEND_URL;
+    const API_URL = process.env.REACT_APP_BACKEND_URL || '';
     const token = localStorage.getItem('token');
     const config = { headers: { 'Authorization': `Bearer ${token}` } };
 

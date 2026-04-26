@@ -22,7 +22,7 @@ const Auth = ({ type }) => {
         e.preventDefault();
         setLoading(true);
         const endpoint = type === 'login' ? '/api/auth/login' : '/api/auth/register';
-        const API_URL = process.env.REACT_APP_BACKEND_URL;
+        const API_URL = process.env.REACT_APP_BACKEND_URL || '';
 
         try {
             const res = await axios.post(`${API_URL}${endpoint}`, formData);

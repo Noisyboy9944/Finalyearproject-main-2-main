@@ -17,7 +17,7 @@ const CertificateView = () => {
     useEffect(() => {
         const fetchEligibility = async () => {
             try {
-                const API_URL = process.env.REACT_APP_BACKEND_URL;
+                const API_URL = process.env.REACT_APP_BACKEND_URL || '';
                 const token = localStorage.getItem('token');
                 const config = { headers: { 'Authorization': `Bearer ${token}` } };
                 const res = await axios.get(`${API_URL}/api/certificates/${programId}/eligibility`, config);
@@ -33,7 +33,7 @@ const CertificateView = () => {
 
     const handleGenerate = async () => {
         try {
-            const API_URL = process.env.REACT_APP_BACKEND_URL;
+            const API_URL = process.env.REACT_APP_BACKEND_URL || '';
             const token = localStorage.getItem('token');
             const config = { headers: { 'Authorization': `Bearer ${token}` } };
             const res = await axios.post(`${API_URL}/api/certificates/${programId}/generate`, {}, config);

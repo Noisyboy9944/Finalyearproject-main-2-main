@@ -44,7 +44,7 @@ const ChatBot = () => {
         if (isOpen && !historyLoaded) {
             const loadHistory = async () => {
                 try {
-                    const API_URL = process.env.REACT_APP_BACKEND_URL;
+                    const API_URL = process.env.REACT_APP_BACKEND_URL || '';
                     const res = await axios.get(`${API_URL}/api/chat/history/${sessionId}`);
                     if (res.data && res.data.length > 0) {
                         const historyMessages = res.data.map(h => ({
@@ -71,7 +71,7 @@ const ChatBot = () => {
         setLoading(true);
 
         try {
-            const API_URL = process.env.REACT_APP_BACKEND_URL;
+            const API_URL = process.env.REACT_APP_BACKEND_URL || '';
             const res = await axios.post(`${API_URL}/api/chat`, {
                 message: userMsg,
                 session_id: sessionId,
@@ -233,7 +233,7 @@ const ChatBot = () => {
                                                 setInput('');
                                                 setMessages(prev => [...prev, { role: 'user', content: q }]);
                                                 setLoading(true);
-                                                const API_URL = process.env.REACT_APP_BACKEND_URL;
+                                                const API_URL = process.env.REACT_APP_BACKEND_URL || '';
                                                 axios.post(`${API_URL}/api/chat`, {
                                                     message: q,
                                                     session_id: sessionId,

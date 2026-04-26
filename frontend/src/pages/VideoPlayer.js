@@ -27,7 +27,7 @@ const VideoPlayer = () => {
     const playerRef = useRef(null);
     const intervalRef = useRef(null);
 
-    const API_URL = process.env.REACT_APP_BACKEND_URL;
+    const API_URL = process.env.REACT_APP_BACKEND_URL || '';
     const token = localStorage.getItem('token');
 
     useEffect(() => {

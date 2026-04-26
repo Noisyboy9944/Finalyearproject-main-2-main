@@ -15,7 +15,7 @@ const QuizView = () => {
     useEffect(() => {
         const fetchQuiz = async () => {
             try {
-                const API_URL = process.env.REACT_APP_BACKEND_URL;
+                const API_URL = process.env.REACT_APP_BACKEND_URL || '';
                 const token = localStorage.getItem('token');
                 const config = { headers: { 'Authorization': `Bearer ${token}` } };
                 const res = await axios.get(`${API_URL}/api/programs/${programId}/quiz`, config);
@@ -41,7 +41,7 @@ const QuizView = () => {
         }
 
         try {
-            const API_URL = process.env.REACT_APP_BACKEND_URL;
+            const API_URL = process.env.REACT_APP_BACKEND_URL || '';
             const token = localStorage.getItem('token');
             const config = { headers: { 'Authorization': `Bearer ${token}` } };
             const res = await axios.post(

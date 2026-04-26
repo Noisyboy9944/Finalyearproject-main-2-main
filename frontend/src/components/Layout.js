@@ -28,7 +28,7 @@ const Layout = () => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const API_URL = process.env.REACT_APP_BACKEND_URL;
+                    const API_URL = process.env.REACT_APP_BACKEND_URL || '';
                     await fetch(`${API_URL}/api/progress/activity`, {
                         method: 'POST',
                         headers: {
@@ -47,7 +47,7 @@ const Layout = () => {
     useEffect(() => {
         const fetchPrograms = async () => {
             try {
-                const API_URL = process.env.REACT_APP_BACKEND_URL;
+                const API_URL = process.env.REACT_APP_BACKEND_URL || '';
                 const res = await axios.get(`${API_URL}/api/explore`);
                 setPrograms(res.data);
             } catch (err) {

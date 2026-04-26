@@ -21,7 +21,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const API_URL = process.env.REACT_APP_BACKEND_URL;
+                const API_URL = process.env.REACT_APP_BACKEND_URL || '';
                 const token = localStorage.getItem('token');
                 const headers = { 'Authorization': `Bearer ${token}` };
                 const [profileRes, enrollRes] = await Promise.all([
@@ -46,7 +46,7 @@ const Profile = () => {
     const handleSaveProfile = async () => {
         setSaveLoading(true);
         try {
-            const API_URL = process.env.REACT_APP_BACKEND_URL;
+            const API_URL = process.env.REACT_APP_BACKEND_URL || '';
             const token = localStorage.getItem('token');
             const res = await axios.put(`${API_URL}/api/profile`, 
                 { 
