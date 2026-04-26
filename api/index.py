@@ -1094,91 +1094,87 @@ async def seed_data():
 
 @api_router.post("/seed-quizzes")
 async def seed_quizzes():
-    """Seed the database with proper quiz questions from seed_quizzes.js"""
-    quizzes = [
-        {
-            "program_id": "5a8e0f6b-7b0b-4b1a-9f5e-1b2c3d4e5f6a",
-            "questions": [
-                {"id": str(uuid.uuid4()), "text": "In brand identity design, what does 'White Space' help achieve?", "options": ["Makes the design smaller", "Reduces printing costs", "Provides visual breathing room and focus", "Allows for more text"], "correct_option_index": 2},
-                {"id": str(uuid.uuid4()), "text": "Which color model is primarily used for print design?", "options": ["RGB", "CMYK", "HSL", "HEX"], "correct_option_index": 1},
-                {"id": str(uuid.uuid4()), "text": "What is the primary difference between 'Kerning' and 'Leading'?", "options": ["Kerning is vertical, Leading is horizontal", "Kerning is between characters, Leading is between lines", "They are the same", "One is for images, one for text"], "correct_option_index": 1},
-                {"id": str(uuid.uuid4()), "text": "A logo that looks the same on both sides is an example of which design principle?", "options": ["Contrast", "Hierarchy", "Symmetry/Balance", "Repetition"], "correct_option_index": 2}
-            ]
-        },
-        {
-            "program_id": "8b605dee-0056-441c-a989-b79cc8517aec",
-            "questions": [
-                {"id": str(uuid.uuid4()), "text": "Which of the following is the correct way to declare a pointer in C?", "options": ["int p;", "int &p;", "int *p;", "pointer int p;"], "correct_option_index": 2},
-                {"id": str(uuid.uuid4()), "text": "What is the result of '5 % 2' in C programming?", "options": ["2.5", "2", "1", "0"], "correct_option_index": 2},
-                {"id": str(uuid.uuid4()), "text": "Which header file is required for using the 'printf' function?", "options": ["conio.h", "math.h", "stdlib.h", "stdio.h"], "correct_option_index": 3},
-                {"id": str(uuid.uuid4()), "text": "Every C program must have exactly one ______ function to start execution.", "options": ["start()", "main()", "begin()", "init()"], "correct_option_index": 1}
-            ]
-        },
-        {
-            "program_id": "5bfc208f-08ef-44e0-aea9-38548de0b2fc",
-            "questions": [
-                {"id": str(uuid.uuid4()), "text": "What does SEO stand for in Digital Marketing?", "options": ["Social Engine Optimization", "Search Engine Optimization", "Sales Enablement Office", "Secure Electronic Online"], "correct_option_index": 1},
-                {"id": str(uuid.uuid4()), "text": "Which of these is a form of 'Paid Search' advertising?", "options": ["Organic Search", "Blogging", "PPC (Pay-Per-Click)", "Email Newsletters"], "correct_option_index": 2},
-                {"id": str(uuid.uuid4()), "text": "The 'Marketing Funnel' stage where a customer discovers a brand is called:", "options": ["Conversion", "Loyalty", "Awareness", "Consideration"], "correct_option_index": 2},
-                {"id": str(uuid.uuid4()), "text": "Which metric measures the percentage of people who click a link after seeing an ad?", "options": ["ROI", "CTR (Click-Through Rate)", "CPC", "CPM"], "correct_option_index": 1}
-            ]
-        },
-        {
-            "program_id": "5ccd9fb7-426b-4e1d-bcce-5aee4ce14c81",
-            "questions": [
-                {"id": str(uuid.uuid4()), "text": "Which of these best describes 'User Experience' (UX)?", "options": ["The visual buttons and colors", "The internal logical feel and usability of a product", "The marketing logo", "The server speed"], "correct_option_index": 1},
-                {"id": str(uuid.uuid4()), "text": "What is the primary purpose of a 'Wireframe'?", "options": ["To show final colors", "To test the production code", "To outline the basic structure and layout", "To create a high-fidelity prototype"], "correct_option_index": 2},
-                {"id": str(uuid.uuid4()), "text": "In design, 'Accessibility' refers to:", "options": ["How fast the site loads", "Making the product usable for everyone, including people with disabilities", "Allowing users to access the source code", "Lowering the subscription price"], "correct_option_index": 1},
-                {"id": str(uuid.uuid4()), "text": "Which phase of the Design Thinking process involves observing users?", "options": ["Empathize", "Define", "Ideate", "Prototype"], "correct_option_index": 0}
-            ]
-        },
-        {
-            "program_id": "02cff3de-f2b8-43ac-b765-9469724a280d",
-            "questions": [
-                {"id": str(uuid.uuid4()), "text": "How do you define a function in Python?", "options": ["function myFunc():", "def myFunc():", "func myFunc():", "define myFunc():"], "correct_option_index": 1},
-                {"id": str(uuid.uuid4()), "text": "Which of the following is used to handle exceptions in Python?", "options": ["try...except", "do...while", "catch...throw", "if...else"], "correct_option_index": 0},
-                {"id": str(uuid.uuid4()), "text": "What is the correct syntax to create a list in Python?", "options": ["(1, 2, 3)", "{1, 2, 3}", "[1, 2, 3]", "list<1, 2, 3>"], "correct_option_index": 2},
-                {"id": str(uuid.uuid4()), "text": "Python uses ______ to define blocks of code instead of curly braces.", "options": ["Semicolons", "Parentheses", "Indentation", "Keywords"], "correct_option_index": 2}
-            ]
-        },
-        {
-            "program_id": "3b49eadb-6746-4ed9-9c2f-82c155a0041d",
-            "questions": [
-                {"id": str(uuid.uuid4()), "text": "Which SQL command is used to retrieve data from a database?", "options": ["GET", "OPEN", "FETCH", "SELECT"], "correct_option_index": 3},
-                {"id": str(uuid.uuid4()), "text": "What does the 'WHERE' clause do in a SELECT statement?", "options": ["Sorts the data", "Filters records based on a condition", "Deletes the table", "Joins two tables"], "correct_option_index": 1},
-                {"id": str(uuid.uuid4()), "text": "A unique identifier for each record in a table is called a:", "options": ["Foreign Key", "Primary Key", "Index Key", "Master Key"], "correct_option_index": 1},
-                {"id": str(uuid.uuid4()), "text": "Which command removes all records from a table without deleting the table structure?", "options": ["DELETE", "DROP", "TRUNCATE", "REMOVE"], "correct_option_index": 2}
-            ]
-        },
-        {
-            "program_id": "5cc69c85-3e1f-4404-87fd-77d114cfbb7d",
-            "questions": [
-                {"id": str(uuid.uuid4()), "text": "Which data structure follows the LIFO (Last-In-First-Out) principle?", "options": ["Queue", "Linked List", "Stack", "Array"], "correct_option_index": 2},
-                {"id": str(uuid.uuid4()), "text": "What is the time complexity of searching for an element in a Hash Map (average case)?", "options": ["O(n)", "O(log n)", "O(1)", "O(n^2)"], "correct_option_index": 2},
-                {"id": str(uuid.uuid4()), "text": "Which algorithm is a 'Divide and Conquer' sorting algorithm?", "options": ["Bubble Sort", "Insertion Sort", "Merge Sort", "Selection Sort"], "correct_option_index": 2},
-                {"id": str(uuid.uuid4()), "text": "In a Linked List, each node contains data and a ______ to the next node.", "options": ["Index", "Reference/Pointer", "Array", "String"], "correct_option_index": 1}
-            ]
-        },
-        {
-            "program_id": "6f86fbb0-6802-475f-9120-f75057eec305",
-            "questions": [
-                {"id": str(uuid.uuid4()), "text": "What does SaaS stand for?", "options": ["Server as a Service", "Software as a Service", "System as a Service", "Security as a Service"], "correct_option_index": 1},
-                {"id": str(uuid.uuid4()), "text": "Which cloud service provides a virtual machine instance (like EC2)?", "options": ["IaaS", "PaaS", "SaaS", "Serverless"], "correct_option_index": 0},
-                {"id": str(uuid.uuid4()), "text": "In AWS, an 'S3 Bucket' is primarily used for:", "options": ["Running code", "Managing databases", "Object storage", "Networking"], "correct_option_index": 2},
-                {"id": str(uuid.uuid4()), "text": "What is 'Cloud Elasticity'?", "options": ["The ability to change colors", "Automatically scaling resources up or down based on demand", "Securing a network with a firewall", "The physical wires in a data center"], "correct_option_index": 1}
-            ]
-        }
-    ]
+    """Seed 5 subject-accurate quiz questions per program, looked up by title."""
+
+    QUIZ_BANK = {
+        "Graphic designing": [
+            {"text": "What does 'White Space' help achieve in design?", "options": ["Makes design smaller", "Reduces printing costs", "Provides visual breathing room and focus", "Allows more text"], "correct_option_index": 2},
+            {"text": "Which color model is used for print design?", "options": ["RGB", "CMYK", "HSL", "HEX"], "correct_option_index": 1},
+            {"text": "What is the difference between 'Kerning' and 'Leading'?", "options": ["Kerning is vertical, Leading is horizontal", "Kerning adjusts space between characters, Leading adjusts space between lines", "They are the same", "One is for images, one is for text"], "correct_option_index": 1},
+            {"text": "A logo that looks the same on both sides uses which design principle?", "options": ["Contrast", "Hierarchy", "Symmetry/Balance", "Repetition"], "correct_option_index": 2},
+            {"text": "Which file format supports transparent backgrounds in graphic design?", "options": ["JPG", "BMP", "PNG", "GIF"], "correct_option_index": 2},
+        ],
+        "C programming": [
+            {"text": "Which is the correct way to declare a pointer in C?", "options": ["int p;", "int &p;", "int *p;", "pointer int p;"], "correct_option_index": 2},
+            {"text": "What is the result of '5 % 2' in C?", "options": ["2.5", "2", "1", "0"], "correct_option_index": 2},
+            {"text": "Which header file is required for 'printf'?", "options": ["conio.h", "math.h", "stdlib.h", "stdio.h"], "correct_option_index": 3},
+            {"text": "Every C program must have exactly one ______ function.", "options": ["start()", "main()", "begin()", "init()"], "correct_option_index": 1},
+            {"text": "Which loop in C is guaranteed to execute at least once?", "options": ["for", "while", "do-while", "foreach"], "correct_option_index": 2},
+        ],
+        "Digital marketing": [
+            {"text": "What does SEO stand for?", "options": ["Social Engine Optimization", "Search Engine Optimization", "Sales Enablement Office", "Secure Electronic Online"], "correct_option_index": 1},
+            {"text": "Which is a form of 'Paid Search' advertising?", "options": ["Organic Search", "Blogging", "PPC (Pay-Per-Click)", "Email Newsletters"], "correct_option_index": 2},
+            {"text": "The funnel stage where a customer first discovers a brand is:", "options": ["Conversion", "Loyalty", "Awareness", "Consideration"], "correct_option_index": 2},
+            {"text": "Which metric measures the % of people who click an ad link?", "options": ["ROI", "CTR (Click-Through Rate)", "CPC", "CPM"], "correct_option_index": 1},
+            {"text": "What is a 'Backlink' in SEO?", "options": ["A broken link on your site", "A link from another website pointing to your site", "A link to your homepage", "An internal site menu link"], "correct_option_index": 1},
+        ],
+        "Ui/Ux": [
+            {"text": "Which best describes 'User Experience' (UX)?", "options": ["The visual buttons and colors", "The overall feel and usability of a product", "The marketing logo", "The server speed"], "correct_option_index": 1},
+            {"text": "What is the primary purpose of a 'Wireframe'?", "options": ["To show final colors", "To test production code", "To outline the basic structure and layout", "To create a high-fidelity prototype"], "correct_option_index": 2},
+            {"text": "'Accessibility' in design refers to:", "options": ["How fast the site loads", "Making the product usable for everyone including people with disabilities", "Allowing users to access source code", "Lowering the subscription price"], "correct_option_index": 1},
+            {"text": "Which Design Thinking phase involves observing users?", "options": ["Empathize", "Define", "Ideate", "Prototype"], "correct_option_index": 0},
+            {"text": "What does 'UI' stand for?", "options": ["Universal Interface", "User Interface", "Unified Integration", "Usability Index"], "correct_option_index": 1},
+        ],
+        "Python": [
+            {"text": "How do you define a function in Python?", "options": ["function myFunc():", "def myFunc():", "func myFunc():", "define myFunc():"], "correct_option_index": 1},
+            {"text": "Which is used to handle exceptions in Python?", "options": ["try...except", "do...while", "catch...throw", "if...else"], "correct_option_index": 0},
+            {"text": "What is the correct syntax to create a list in Python?", "options": ["(1, 2, 3)", "{1, 2, 3}", "[1, 2, 3]", "list<1, 2, 3>"], "correct_option_index": 2},
+            {"text": "Python uses ______ to define blocks instead of curly braces.", "options": ["Semicolons", "Parentheses", "Indentation", "Keywords"], "correct_option_index": 2},
+            {"text": "Which keyword is used to create a class in Python?", "options": ["struct", "class", "def", "object"], "correct_option_index": 1},
+        ],
+        "MYSQL": [
+            {"text": "Which SQL command retrieves data from a database?", "options": ["GET", "OPEN", "FETCH", "SELECT"], "correct_option_index": 3},
+            {"text": "What does the 'WHERE' clause do in a SELECT statement?", "options": ["Sorts the data", "Filters records based on a condition", "Deletes the table", "Joins two tables"], "correct_option_index": 1},
+            {"text": "A unique identifier for each record in a table is called a:", "options": ["Foreign Key", "Primary Key", "Index Key", "Master Key"], "correct_option_index": 1},
+            {"text": "Which command removes all records without deleting the table structure?", "options": ["DELETE", "DROP", "TRUNCATE", "REMOVE"], "correct_option_index": 2},
+            {"text": "Which SQL clause is used to sort results?", "options": ["GROUP BY", "HAVING", "ORDER BY", "SORT BY"], "correct_option_index": 2},
+        ],
+        "DSA": [
+            {"text": "Which data structure follows the LIFO principle?", "options": ["Queue", "Linked List", "Stack", "Array"], "correct_option_index": 2},
+            {"text": "Average-case time complexity of Hash Map lookup?", "options": ["O(n)", "O(log n)", "O(1)", "O(n^2)"], "correct_option_index": 2},
+            {"text": "Which algorithm is a 'Divide and Conquer' sorting algorithm?", "options": ["Bubble Sort", "Insertion Sort", "Merge Sort", "Selection Sort"], "correct_option_index": 2},
+            {"text": "In a Linked List, each node contains data and a ______.", "options": ["Index", "Reference/Pointer", "Array", "String"], "correct_option_index": 1},
+            {"text": "Which data structure uses FIFO order?", "options": ["Stack", "Queue", "Tree", "Graph"], "correct_option_index": 1},
+        ],
+        "Cloud computing": [
+            {"text": "What does SaaS stand for?", "options": ["Server as a Service", "Software as a Service", "System as a Service", "Security as a Service"], "correct_option_index": 1},
+            {"text": "Which cloud model provides virtual machines (like EC2)?", "options": ["IaaS", "PaaS", "SaaS", "Serverless"], "correct_option_index": 0},
+            {"text": "AWS S3 Bucket is primarily used for:", "options": ["Running code", "Managing databases", "Object storage", "Networking"], "correct_option_index": 2},
+            {"text": "What is 'Cloud Elasticity'?", "options": ["Ability to change UI colors", "Auto-scaling resources up/down based on demand", "Securing a network with a firewall", "Physical wires in a data center"], "correct_option_index": 1},
+            {"text": "Which cloud deployment model is exclusively used by one organisation?", "options": ["Public Cloud", "Hybrid Cloud", "Community Cloud", "Private Cloud"], "correct_option_index": 3},
+        ],
+    }
 
     count = 0
-    for quiz_data in quizzes:
-        await db.quizzes.delete_many({"program_id": quiz_data["program_id"]})
-        quiz_obj = {"id": str(uuid.uuid4()), "program_id": quiz_data["program_id"], "questions": quiz_data["questions"]}
+    results = []
+    for title, questions in QUIZ_BANK.items():
+        program = await db.programs.find_one({"title": title})
+        if not program:
+            results.append(f"SKIP: '{title}' not found in DB")
+            continue
+        pid = program["id"]
+        await db.quizzes.delete_many({"program_id": pid})
+        questions_with_ids = [{"id": str(uuid.uuid4()), **q} for q in questions]
+        quiz_obj = {"id": str(uuid.uuid4()), "program_id": pid, "questions": questions_with_ids}
         await db.quizzes.insert_one(quiz_obj)
         count += 1
+        results.append(f"OK: '{title}' -> {len(questions)} questions")
 
-    return {"message": f"Successfully seeded {count} quizzes with real questions!"}
+    return {"message": f"Seeded {count}/8 quizzes", "details": results}
 
 app.include_router(api_router)
+
+
+
 
 
