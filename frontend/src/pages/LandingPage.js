@@ -140,7 +140,7 @@ const NarrativeSection = ({ step, scrollYProgress, text, title, icon }) => {
     return (
         <motion.div 
             style={{ opacity, scale, y, filter }}
-            className="min-h-[60vh] md:min-h-[80vh] flex flex-col justify-center p-6 sm:p-10 md:p-16 w-full max-w-4xl mx-auto"
+            className="min-h-[50vh] md:min-h-[80vh] flex flex-col justify-center px-4 py-8 sm:p-10 md:p-16 w-full max-w-4xl mx-auto"
         >
             <div className="bg-white/40 backdrop-blur-3xl border border-white/60 p-8 md:p-16 rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] w-full">
                 <div className="mb-6 md:mb-8 inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-3xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 shadow-[inset_0_2px_10px_rgba(255,255,255,0.6)] backdrop-blur-xl border border-white text-marketing-secondary">
@@ -427,8 +427,8 @@ const LandingPage = () => {
             {/* --- THE NARRATIVE SCROLL CONTAINER --- */}
             <div ref={containerRef} className="relative">
                 
-                {/* Sticky Visual Background */}
-                <div className="sticky top-0 h-screen w-full overflow-hidden -z-10">
+                {/* Sticky Visual Background — hidden on mobile to prevent lag */}
+                <div className="sticky top-0 h-screen w-full overflow-hidden -z-10 hidden md:block">
                     <motion.img src={IMAGES.spark} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: useTransform(scrollYProgress, [0, 1.4/6, 1.5/6], [1, 1, 0]) }} alt="" />
                     <motion.img src={IMAGES.chaos} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: useTransform(scrollYProgress, [1.4/6, 1.5/6, 2.4/6, 2.5/6], [0, 1, 1, 0]) }} alt="" />
                     <motion.img src={IMAGES.clarity} className="absolute inset-0 w-full h-full object-cover" style={{ opacity: useTransform(scrollYProgress, [2.4/6, 2.5/6, 3.4/6, 3.5/6], [0, 1, 1, 0]) }} alt="" />

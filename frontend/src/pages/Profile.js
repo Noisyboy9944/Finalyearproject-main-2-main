@@ -87,35 +87,35 @@ const Profile = () => {
             </div>
 
             {/* Header Section */}
-            <header className="mb-10 bg-white/40 backdrop-blur-2xl border border-white/60 p-6 md:p-8 rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex items-center gap-4 md:gap-6">
-                <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-3xl md:text-4xl lg:text-5xl text-white font-bold shadow-lg border-4 border-white shrink-0">
+            <header className="mb-8 bg-white/40 backdrop-blur-2xl border border-white/60 p-5 sm:p-6 md:p-8 rounded-[2rem] shadow-[0_8px_32px_rgba(0,0,0,0.04)] flex items-center gap-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-2xl sm:text-3xl md:text-4xl text-white font-bold shadow-lg border-4 border-white shrink-0">
                     {profile?.user?.full_name?.charAt(0) || 'U'}
                 </div>
-                <div>
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-serif font-bold text-gray-900 mb-1">{profile?.user?.full_name}</h1>
-                    <p className="text-gray-500 font-mono text-sm lg:text-base">{profile?.user?.email}</p>
+                <div className="min-w-0">
+                    <h1 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-gray-900 mb-1 truncate">{profile?.user?.full_name}</h1>
+                    <p className="text-gray-500 font-mono text-xs sm:text-sm truncate">{profile?.user?.email}</p>
                 </div>
             </header>
 
             {/* Navigation Tabs */}
-            <div className="flex gap-4 border-b border-gray-200 mb-8">
+            <div className="flex gap-1 border-b border-gray-200 mb-8 overflow-x-auto scrollbar-hide -mx-1 px-1">
                 <button
                     onClick={() => setActiveTab('info')}
-                    className={`pb-4 px-2 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'info' ? 'border-lms-primary text-lms-primary' : 'border-transparent text-gray-500 hover:text-gray-900'}`}
+                    className={`pb-3 px-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 ${activeTab === 'info' ? 'border-lms-primary text-lms-primary' : 'border-transparent text-gray-500 hover:text-gray-900'}`}
                 >
-                    <UserCircle size={20} /> Personal Info
+                    <UserCircle size={18} /> Info
                 </button>
                 <button
                     onClick={() => setActiveTab('courses')}
-                    className={`pb-4 px-2 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'courses' ? 'border-lms-primary text-lms-primary' : 'border-transparent text-gray-500 hover:text-gray-900'}`}
+                    className={`pb-3 px-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 ${activeTab === 'courses' ? 'border-lms-primary text-lms-primary' : 'border-transparent text-gray-500 hover:text-gray-900'}`}
                 >
-                    <BookBookmark size={20} /> Enrolled Courses
+                    <BookBookmark size={18} /> Courses
                 </button>
                 <button
                     onClick={() => setActiveTab('certificates')}
-                    className={`pb-4 px-2 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'certificates' ? 'border-lms-primary text-lms-primary' : 'border-transparent text-gray-500 hover:text-gray-900'}`}
+                    className={`pb-3 px-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-1.5 whitespace-nowrap shrink-0 ${activeTab === 'certificates' ? 'border-lms-primary text-lms-primary' : 'border-transparent text-gray-500 hover:text-gray-900'}`}
                 >
-                    <Certificate size={20} /> Certificates
+                    <Certificate size={18} /> Certs
                 </button>
             </div>
 

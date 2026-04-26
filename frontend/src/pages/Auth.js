@@ -42,14 +42,14 @@ const Auth = ({ type }) => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-transparent text-gray-900 relative overflow-hidden selection:bg-marketing-secondary selection:text-white">
+        <div className="min-h-screen flex items-center justify-center bg-transparent text-gray-900 relative overflow-x-hidden overflow-y-auto py-8 selection:bg-marketing-secondary selection:text-white">
              <Toaster position="top-center" />
             <LiquidBackground />
 
             {/* Back Button */}
-            <div className="absolute top-4 left-4 md:top-8 md:left-8 z-20">
-                <Link to="/" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-mono rounded-full bg-white/50 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 border border-white/20 shadow-sm hover:shadow-md text-sm md:text-base">
-                    <CaretLeft size={20} /> <span className="hidden sm:inline">Back to Home</span><span className="sm:hidden">Back</span>
+            <div className="absolute top-4 left-4 z-20">
+                <Link to="/" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors font-mono rounded-full bg-white/50 backdrop-blur-md px-3 py-1.5 border border-white/20 shadow-sm hover:shadow-md text-sm">
+                    <CaretLeft size={18} /> <span className="hidden sm:inline">Back to Home</span><span className="sm:hidden">Back</span>
                 </Link>
             </div>
 
@@ -57,9 +57,9 @@ const Auth = ({ type }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="w-full max-w-md p-8 bg-white/60 backdrop-blur-2xl border border-white/50 rounded-3xl relative z-10 shadow-2xl shadow-indigo-500/10"
+                className="w-full max-w-md mx-4 sm:mx-auto p-6 sm:p-8 bg-white/60 backdrop-blur-2xl border border-white/50 rounded-3xl relative z-10 shadow-2xl shadow-indigo-500/10 mt-14 mb-4"
             >
-                <h2 className="text-3xl font-serif text-center mb-8 text-gray-900">
+                <h2 className="text-2xl sm:text-3xl font-serif text-center mb-6 sm:mb-8 text-gray-900">
                     {type === 'login' ? 'Welcome Back' : 'Join Unilearn'}
                 </h2>
 
