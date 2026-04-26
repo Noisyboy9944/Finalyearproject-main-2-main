@@ -3,6 +3,9 @@
   command = "npm install --legacy-peer-deps && npm run build"
   publish = "build"
 
+[build.environment]
+  CI = "false"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
