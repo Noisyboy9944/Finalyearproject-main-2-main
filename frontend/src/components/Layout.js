@@ -107,41 +107,52 @@ const Layout = () => {
             <LiquidBackground />
 
             {/* Mobile Header */}
-            <header className="md:hidden flex items-center justify-between p-4 bg-white/60 backdrop-blur-xl border-b border-white/40 sticky top-0 z-30 shadow-sm">
-                <h1 className="text-xl font-serif font-bold text-lms-primary">Unilearn</h1>
+            <header className="md:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-30 bg-white/40 backdrop-blur-2xl border-b border-white/30 shadow-sm shadow-black/5">
+                <h1 className="text-xl font-serif font-bold text-lms-primary tracking-tight">Unilearn</h1>
                 <button 
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="p-2 rounded-lg bg-lms-primary text-white shadow-md active:scale-95 transition-transform"
+                    className={`p-2.5 rounded-xl transition-all duration-300 active:scale-95 ${isSidebarOpen ? 'bg-lms-primary/10 text-lms-primary' : 'bg-lms-primary text-white shadow-md shadow-lms-primary/30'}`}
+                    aria-label="Toggle menu"
                 >
-                    <div className="w-6 h-5 flex flex-col justify-between relative">
-                        <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${isSidebarOpen ? 'rotate-45 translate-y-2' : ''}`} />
-                        <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${isSidebarOpen ? 'opacity-0' : ''}`} />
-                        <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${isSidebarOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+                    <div className="w-5 h-4 flex flex-col justify-between relative">
+                        <span className={`w-full h-0.5 rounded-full transition-all duration-300 ${isSidebarOpen ? 'bg-lms-primary rotate-45 translate-y-[7px]' : 'bg-white'}`} />
+                        <span className={`w-full h-0.5 rounded-full transition-all duration-300 ${isSidebarOpen ? 'opacity-0 bg-lms-primary' : 'bg-white'}`} />
+                        <span className={`w-full h-0.5 rounded-full transition-all duration-300 ${isSidebarOpen ? 'bg-lms-primary -rotate-45 -translate-y-[9px]' : 'bg-white'}`} />
                     </div>
                 </button>
             </header>
 
-            {/* Sidebar Overlay (Mobile Only) */}
-            {isSidebarOpen && (
-                <div 
-                    className="md:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity"
-                    onClick={() => setIsSidebarOpen(false)}
-                />
-            )}
+            {/* Liquid Glass Overlay (Mobile Only) */}
+            <div 
+                className={`md:hidden fixed inset-0 z-40 transition-all duration-300 ${isSidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+                style={{
+                    background: isSidebarOpen ? 'rgba(255,255,255,0.15)' : 'transparent',
+                    backdropFilter: isSidebarOpen ? 'blur(12px) saturate(180%)' : 'none',
+                    WebkitBackdropFilter: isSidebarOpen ? 'blur(12px) saturate(180%)' : 'none',
+                }}
+                onClick={() => setIsSidebarOpen(false)}
+            />
 
-            {/* Sidebar with Glassmorphism */}
-            <aside className={`w-72 shrink-0 md:sticky md:top-0 md:h-screen md:overflow-y-auto fixed h-full bg-white/60 backdrop-blur-xl border-r border-white/40 flex flex-col z-50 shadow-xl shadow-gray-200/20 transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-                <div className="p-6 border-b border-white/20">
-                    <h1 className="text-xl font-serif font-bold text-lms-primary mb-6">Unilearn</h1>
+            {/* Sidebar */}
+            <aside className={`w-72 shrink-0 md:sticky md:top-0 md:h-screen md:overflow-y-auto fixed h-full flex flex-col z-50 transition-transform duration-300 ease-in-out shadow-2xl shadow-black/10 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
+                style={{
+                    background: 'rgba(255,255,255,0.72)',
+                    backdropFilter: 'blur(28px) saturate(200%)',
+                    WebkitBackdropFilter: 'blur(28px) saturate(200%)',
+                    borderRight: '1px solid rgba(255,255,255,0.5)',
+                }}
+            >
+                <div className="p-5 border-b border-white/20">
+                    <h1 className="text-xl font-serif font-bold text-lms-primary mb-5">Unilearn</h1>
                     <div className="relative" ref={searchRef}>
-                        <MagnifyingGlass size={18} className="absolute left-3 top-3 text-gray-400" />
+                        <MagnifyingGlass size={16} className="absolute left-3 top-3 text-gray-400" />
                         <input 
                             type="text" 
                             placeholder="Search courses..." 
                             value={searchQuery}
                             onChange={handleSearch}
                             onFocus={() => setIsSearchOpen(true)}
-                            className="w-full bg-white/40 border border-white/60 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-lms-primary/50 text-gray-800 placeholder-gray-500 backdrop-blur-sm shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-shadow"
+                            className="w-full bg-white/40 border border-white/60 text-sm rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-lms-primary/50 text-gray-800 placeholder-gray-400 backdrop-blur-sm transition-shadow"
                         />
                         
                         {/* Search Dropdown */}
@@ -158,7 +169,7 @@ const Layout = () => {
                                                     <Link 
                                                         key={`p-${p.id}`} 
                                                         to={`/app/program/${p.id}`}
-                                                        onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}
+                                                        onClick={() => { setIsSearchOpen(false); setSearchQuery(''); setIsSidebarOpen(false); }}
                                                         className="block px-4 py-3 hover:bg-lms-primary/5 transition-colors border-b border-gray-50 last:border-0"
                                                     >
                                                         <div className="text-sm font-semibold text-gray-900 line-clamp-1">{p.title}</div>
@@ -174,7 +185,7 @@ const Layout = () => {
                                                     <Link 
                                                         key={`s-${s.id}`} 
                                                         to={`/app/subject/${s.id}`}
-                                                        onClick={() => { setIsSearchOpen(false); setSearchQuery(''); }}
+                                                        onClick={() => { setIsSearchOpen(false); setSearchQuery(''); setIsSidebarOpen(false); }}
                                                         className="block px-4 py-3 hover:bg-lms-primary/5 transition-colors border-b border-gray-50 last:border-0"
                                                     >
                                                         <div className="text-sm font-bold text-gray-900 line-clamp-1">{s.title}</div>
@@ -190,27 +201,28 @@ const Layout = () => {
                     </div>
                 </div>
 
-                <nav className="flex-1 p-4 space-y-2">
-                    <NavItem to="/app" icon={<House size={20} />} label="Dashboard" end />
-                    <NavItem to="/app/explore" icon={<Compass size={20} />} label="Explore Courses" />
+                <nav className="flex-1 p-4 space-y-1.5">
+                    <NavItem to="/app" icon={<House size={20} />} label="Dashboard" end onNavigate={() => setIsSidebarOpen(false)} />
+                    <NavItem to="/app/explore" icon={<Compass size={20} />} label="Explore Courses" onNavigate={() => setIsSidebarOpen(false)} />
                 </nav>
 
                 <div className="p-4 border-t border-white/20">
                     <Link 
                         to="/app/profile"
+                        onClick={() => setIsSidebarOpen(false)}
                         className="flex items-center gap-3 px-4 py-3 mb-2 rounded-xl bg-white/40 border border-white/50 shadow-sm hover:shadow-md hover:bg-white/60 hover:-translate-y-0.5 transition-all outline-none focus:ring-2 focus:ring-lms-primary/50"
                     >
-                        <div className="w-8 h-8 rounded-full bg-lms-primary text-white flex items-center justify-center font-bold">
+                        <div className="w-8 h-8 rounded-full bg-lms-primary text-white flex items-center justify-center font-bold text-sm">
                             {user[0]}
                         </div>
                         <div className="overflow-hidden flex-1">
                             <p className="text-sm font-medium text-lms-fg truncate">{user}</p>
-                            <p className="text-xs text-lms-muted transition-colors group-hover:text-lms-primary mt-0.5">View Profile</p>
+                            <p className="text-xs text-lms-muted mt-0.5">View Profile</p>
                         </div>
                     </Link>
                     <button 
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-50/50 rounded-lg transition-colors"
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50/50 rounded-lg transition-colors font-medium"
                     >
                         <SignOut size={20} />
                         Logout
@@ -219,7 +231,7 @@ const Layout = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 min-w-0 p-6 md:p-8 lg:p-10 relative z-10">
+            <main className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 lg:p-10 relative z-10">
                 <Outlet />
             </main>
 
@@ -229,15 +241,16 @@ const Layout = () => {
     );
 };
 
-const NavItem = ({ to, icon, label, end }) => (
+const NavItem = ({ to, icon, label, end, onNavigate }) => (
     <NavLink 
         to={to} 
         end={end}
+        onClick={onNavigate}
         className={({ isActive }) => 
-            `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+            `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                 isActive 
                 ? 'bg-lms-primary text-white shadow-md shadow-lms-primary/20' 
-                : 'text-lms-fg hover:bg-lms-secondary'
+                : 'text-lms-fg hover:bg-white/60 hover:shadow-sm'
             }`
         }
     >
