@@ -109,8 +109,8 @@ const ProgramView = () => {
                                 </div>
                                 <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
                                     <motion.div
-                                        initial={{ width: 0 }}
-                                        animate={{ width: `${progress.progress}%` }}
+                                        initial={{ width: '0%' }}
+                                        animate={{ width: `${progress.progress || 0}%` }}
                                         transition={{ duration: 1.2, ease: 'easeOut' }}
                                         className="h-3 rounded-full bg-gradient-to-r from-lms-primary to-lms-accent shadow-sm"
                                     />
