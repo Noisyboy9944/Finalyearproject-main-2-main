@@ -1,6 +1,7 @@
 import { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Lenis as ReactLenis } from 'lenis/react';
+import { Analytics } from '@vercel/analytics/react';
 
 // Lazy-loaded Pages (code splitting for faster initial load)
 const LandingPage = lazy(() => import("./pages/LandingPage"));
@@ -55,6 +56,7 @@ function App() {
                 </Route>
             </Routes>
             </Suspense>
+            <Analytics />
         </BrowserRouter>
     </ReactLenis>
   );
